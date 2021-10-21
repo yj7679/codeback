@@ -15,7 +15,7 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long roomNumber;
 
-    // 1:1 단방향
+    // 1:1 단방향 //
     @OneToOne
     @JoinColumn(name="userNumber")
     private User user;
