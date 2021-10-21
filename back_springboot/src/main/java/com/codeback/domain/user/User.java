@@ -1,10 +1,14 @@
 package com.codeback.domain.user;
 
+import com.codeback.domain.room.Room;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 
 @Entity
+@NoArgsConstructor
 @Table(name = "User")
 public class User {
 
@@ -21,6 +25,5 @@ public class User {
 
     @NotBlank
     private String nickName;
-
 
 }
