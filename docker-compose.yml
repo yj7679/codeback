@@ -4,16 +4,16 @@ services:
   web:
     image: nginx:latest
     container_name: web
-    restart: "on-failure"
+    restart: "always"
     ports:
       - 80:80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./front-end/nginx.conf:/etc/nginx/nginx.conf
   front-end:
     build:
       context: ./front-end
     container_name: front-end
-    restart: "on-failure"
+    restart: "always"
     expose:
       - 3000
     volumes:
