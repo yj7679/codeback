@@ -1,4 +1,4 @@
-FROM node:12.2.0-alpine
+FROM node:14.15.0-alpine
 MAINTAINER LYJ
 
 RUN mkdir /app
