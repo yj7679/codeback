@@ -9,7 +9,5 @@ COPY . /app
 
 RUN yarn
 RUN yarn build
-RUN apk add --no-cache git
-
 
 CMD ["yarn", "start"]
