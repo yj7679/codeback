@@ -6,9 +6,8 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 
-RUN yarn install --no-cache
-RUN yarn install -g react-scripts
-RUN yarn install -g react-router-dom
+RUN yarn
+RUN yarn build
 RUN apk add --no-cache git
 
 COPY . /app
