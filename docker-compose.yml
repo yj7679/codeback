@@ -17,8 +17,7 @@ services:
     expose:
       - "3000"
     volumes:
-      - "./front-end:/app"
-      - "/app/node_modules"
+      - "./front-end:/var/jenkins_home/workspace/codeback/front-end"
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
