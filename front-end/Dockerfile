@@ -13,14 +13,13 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./ 
 
 # 복사했으니 디펜던시 설치가 가능하다 
-RUN yarn
-RUN yarn build 
+RUN npm install --no-cache
 
 # 소스코드를 복사한다 
 COPY ./ . 
 
 # build 해서 /dist 폴더에 빌드 파일이 생성된다
-CMD ["yarn","start"]
+CMD ["npm","run","server"]
 
 # # nginx 이미지를 받는다. 실행 이미지이구나 
 # FROM nginx as production-stage 
