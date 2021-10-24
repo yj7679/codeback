@@ -18,6 +18,7 @@ COPY ./ .
 
 # build 해서 /dist 폴더에 빌드 파일이 생성된다. 
 RUN yarn build 
+CMD ["yarn","start"]
 
 # nginx 이미지를 받는다. 실행 이미지이구나 
 FROM nginx as production-stage 
