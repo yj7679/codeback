@@ -7,7 +7,7 @@ services:
     container_name: front-end
     restart: "always"
     ports:
-      - "3000:80"
+      - "3000"
     volumes:
       - "./front-end:/app"
       - "/app/node_modules"
@@ -16,3 +16,9 @@ services:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
     tty: true
+    networks:
+      - backend
+
+networks: # 가장 기본적인 bridge 네트워크
+  backend:
+    driver: bridge
