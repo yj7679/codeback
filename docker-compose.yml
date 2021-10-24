@@ -15,7 +15,7 @@ services:
     container_name: front-end
     restart: "always"
     ports:
-      - "3000:80"
+      - "80:3000"
     volumes:
       - "./front-end:/var/jenkins_home/workspace/codeback/front-end"
     environment:
