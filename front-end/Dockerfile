@@ -1,5 +1,4 @@
-FROM node:12.2.0-alpine
-MAINTAINER Seo, JeongKuk
+FROM node:latest
 
 RUN mkdir /app
 WORKDIR /app
