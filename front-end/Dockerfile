@@ -7,17 +7,19 @@ FROM node:latest as build-stage
 # RUN, CMD, ENTRYPOINT의 명령이 실행될 디렉터리 
 WORKDIR /app 
 
+# `/app/node_modules/.bin`을 $PATH 에 추가
+ENV PATH /app/node_modules/.bin:$PATH
 # package.json이 WORKDIR에 복사된다 
 COPY package.json ./ 
 
 # 복사했으니 디펜던시 설치가 가능하다 
-RUN yarn install 
+RUN yarn
+RUN yarn build 
 
 # 소스코드를 복사한다 
 COPY ./ . 
 
-# build 해서 /dist 폴더에 빌드 파일이 생성된다. 
-RUN yarn build 
+# build 해서 /dist 폴더에 빌드 파일이 생성된다
 CMD ["yarn","start"]
 
 # # nginx 이미지를 받는다. 실행 이미지이구나 
