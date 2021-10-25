@@ -8,5 +8,6 @@ COPY package.json /app/package.json
 RUN yarn install
 
 COPY . /app
-EXPOSE 3000
+RUN yarn build
+
 CMD ["yarn", "start"]
