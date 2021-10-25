@@ -1,13 +1,9 @@
 import React from 'react';
 import { Button } from 'antd';
 
-const LoginBtn = () => {
-  const login = () => {
-    console.log('login');
-  };
-
+const LoginBtn = ({ onClick }: { onClick: () => void }) => {
   return (
-    <Button type="link" onClick={login}>
+    <Button type="link" onClick={onClick}>
       로그인
     </Button>
   );

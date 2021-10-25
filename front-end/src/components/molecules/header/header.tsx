@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from 'antd';
-import { LoginBtn, LogoBtn } from 'components';
+import { LoginBtn, LoginModal, LogoBtn } from 'components';
 import { CssKeyObject } from 'types/common';
 import 'assets/css/color.css';
 
@@ -17,10 +17,13 @@ const styles: CssKeyObject = {
 };
 
 const Headers = () => {
+  const [visible, setVisible] = useState(false);
+
   return (
     <Header style={styles.header}>
       <LogoBtn />
-      <LoginBtn />
+      <LoginBtn onClick={() => setVisible(true)} />
+      <LoginModal visible={visible} setVisible={setVisible} />
     </Header>
   );
 };
