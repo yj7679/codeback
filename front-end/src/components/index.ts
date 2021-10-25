@@ -5,3 +5,4 @@ export { default as LogoBtn } from './atoms/btn/logo-btn';
 
 /* molecules */
 export { default as Header } from './molecules/header/header';
+export { default as LoginModal } from './molecules/modal/login-modal';
