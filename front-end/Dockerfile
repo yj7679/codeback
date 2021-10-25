@@ -1,13 +1,21 @@
-FROM node:latest
+FROM node:latest as build-stage
 
 RUN mkdir /app
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 
-RUN yarn install
+RUN yarn
 
-COPY . /app
+COPY ./ .
 RUN yarn build
 
-CMD ["yarn", "start"]
+FROM nginx as production-stage
+
+RUN mkdir /app
+
+COPY --from=build-stage /app/build /app
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN service nginx restart
