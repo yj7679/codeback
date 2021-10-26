@@ -19,6 +19,13 @@ export const routes: RouteType[] = [
     fallback: <h1>Loading...</h1>
   },
   {
+    path: '/signup',
+    exact: true,
+    private: false,
+    component: lazy(() => import('pages/signup/signup')),
+    fallback: <h1>Loading...</h1>
+  },
+  {
     path: '*',
     exact: true,
     private: false,
