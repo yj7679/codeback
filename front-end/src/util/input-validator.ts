@@ -6,7 +6,8 @@ import {
   NICKNAME_LENGTH_FORMAT,
   NICKNAME_CANT_USE_SPECIAL_CHAR,
   DUPLICATED_NICKNAME,
-  INVALID_PASSWORD_FORMAT
+  INVALID_PASSWORD_FORMAT,
+  MANDATORY_PASSWORD
 } from './../common/string-template';
 
 export interface InputValidator {
@@ -60,6 +61,9 @@ class InputValidatorImpl implements InputValidator {
   };
 
   checkPassword = (_: any, password: string) => {
+    if (!password) {
+      return Promise.reject(new Error(MANDATORY_PASSWORD));
+    }
     if (!password.match(this.passwordRegExp)) {
       return Promise.reject(new Error(INVALID_PASSWORD_FORMAT));
     }
