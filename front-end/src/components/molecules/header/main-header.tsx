@@ -16,7 +16,7 @@ const styles: CssKeyObject = {
   }
 };
 
-const Headers = () => {
+const MainHeader = () => {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -28,4 +28,4 @@ const Headers = () => {
   );
 };
 
-export default Headers;
+export default MainHeader;
