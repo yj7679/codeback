@@ -11,11 +11,15 @@ const styles: CssKeyObject = {
 };
 
 type Props = {
+  header: ReactNode;
   createStudyBtn: ReactNode;
 };
 
-const LandingTemplate = ({ createStudyBtn }: Props) => (
-  <div style={styles.container}>{createStudyBtn}</div>
+const LandingTemplate = ({ header, createStudyBtn }: Props) => (
+  <>
+    {header}
+    <div style={styles.container}>{createStudyBtn}</div>
+  </>
 );
 
 export default LandingTemplate;
