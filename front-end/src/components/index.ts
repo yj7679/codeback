@@ -6,6 +6,6 @@ export { default as LogoBtn } from './atoms/btn/logo-btn';
 export { default as PageLoading } from './atoms/loading/page-loading';
 
 /* molecules */
-export { default as Header } from './molecules/header/header';
+export { default as MainHeader } from './molecules/header/main-header';
 export { default as LoginModal } from './molecules/modal/login-modal';
 export { default as SignupForm } from './molecules/form/signup-form';
