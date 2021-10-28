@@ -1,12 +1,22 @@
-FROM node:latest
+FROM node:latest as build-stage
 
 RUN mkdir /app
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 
-RUN yarn install
+RUN yarn
 
-COPY . /app
-EXPOSE 3000
-CMD ["yarn", "start"]
+COPY ./ .
+RUN yarn build
+
+RUN docker-compose up
+#FROM nginx as production-stage
+
+#RUN mkdir /app
+
+#COPY --from=build-stage /app/build /app
+
+#COPY nginx.conf /etc/nginx/nginx.conf
+
+#RUN service nginx restart

@@ -1,12 +1,14 @@
 package com.codeback.domain.user;
 
 import com.codeback.domain.room.Room;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-
+@Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "User")
@@ -23,6 +25,13 @@ public class User {
     private String password;
 
     @NotBlank
-    private String nickName;
+    private String nickname;
+
+    @Builder
+    public User(String email, String password, String nickname){
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
 
 }
