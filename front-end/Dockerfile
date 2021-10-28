@@ -10,12 +10,13 @@ RUN yarn
 COPY ./ .
 RUN yarn build
 
-FROM nginx as production-stage
+RUN docker-compose up
+#FROM nginx as production-stage
 
-RUN mkdir /app
+#RUN mkdir /app
 
-COPY --from=build-stage /app/build /app
+#COPY --from=build-stage /app/build /app
 
-COPY nginx.conf /etc/nginx/nginx.conf
+#COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN service nginx restart
+#RUN service nginx restart
