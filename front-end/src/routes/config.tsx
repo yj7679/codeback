@@ -1,4 +1,5 @@
 import React, { ComponentType, LazyExoticComponent, ReactNode, lazy } from 'react';
+import { PageLoading } from 'components';
 
 export type RouteType = {
   path: string;
@@ -16,13 +17,20 @@ export const routes: RouteType[] = [
     exact: true,
     private: false,
     component: lazy(() => import('pages/landing/landing')),
-    fallback: <h1>Loading...</h1>
+    fallback: <PageLoading />
+  },
+  {
+    path: '/signup',
+    exact: true,
+    private: false,
+    component: lazy(() => import('pages/signup/signup')),
+    fallback: <PageLoading />
   },
   {
     path: '*',
     exact: true,
     private: false,
     component: lazy(() => import('pages/error/not-found')),
-    fallback: <h1>Loading...</h1>
+    fallback: <PageLoading />
   }
 ];

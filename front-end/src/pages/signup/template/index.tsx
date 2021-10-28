@@ -11,15 +11,9 @@ const styles: CssKeyObject = {
 };
 
 type Props = {
-  header: ReactNode;
-  createStudyBtn: ReactNode;
+  signupForm: ReactNode;
 };
 
-const LandingTemplate = ({ header, createStudyBtn }: Props) => (
-  <>
-    {header}
-    <div style={styles.container}>{createStudyBtn}</div>
-  </>
-);
+const SignupTemplate = ({ signupForm }: Props) => <div style={styles.container}>{signupForm}</div>;
 
-export default LandingTemplate;
+export default SignupTemplate;
