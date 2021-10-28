@@ -1,11 +1,14 @@
 package com.codeback.domain.room;
 
 import com.codeback.domain.user.User;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+@Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "Room")
@@ -21,5 +24,12 @@ public class Room {
     private User user;
 
     @NotBlank
-    private String url;
+    @Column
+    private String roomId;
+
+    @Builder
+    public Room(User user, String roomId){
+        this.user = user;
+        this.roomId = roomId;
+    }
 }
