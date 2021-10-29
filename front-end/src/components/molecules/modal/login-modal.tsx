@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Modal, Typography, Form, Input, Button } from 'antd';
 import { CssKeyObject } from 'types/common';
+import inputValidator from 'util/input-validator';
 
 const { Title } = Typography;
 
@@ -55,12 +56,22 @@ const LoginModal = ({ visible, setVisible }: LoginModalProps) => {
       footer={null}>
       <Title style={styles.modalTitle}>코드백</Title>
       <Form name="validate_other" onFinish={onFinish}>
-        <Form.Item name="email" rules={[{ required: true, message: '이메일을 입력해주세요.' }]}>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              validator: inputValidator.checkEmail
+            }
+          ]}>
           <Input type="email" placeholder="이메일" />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: '비밀번호을 입력해주세요.' }]}>
+          rules={[
+            {
+              validator: inputValidator.checkPassword
+            }
+          ]}>
           <Input type="password" placeholder="비밀번호" />
         </Form.Item>
         <Form.Item>
