@@ -27,6 +27,13 @@ export const routes: RouteType[] = [
     fallback: <PageLoading />
   },
   {
+    path: '/study/:id',
+    exact: true,
+    private: false,
+    component: lazy(() => import('pages/study/study')),
+    fallback: <PageLoading />
+  },
+  {
     path: '*',
     exact: true,
     private: false,
