@@ -25,42 +25,34 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider implements InitializingBean {
+	// 서버에서 저장할 암호에 쓰는 키
+	@Value("${tokenSecret}")
+	private String tokenSecret;
 
-	// 토큰의 생성,유효성 검증 등 하는곳
+	// 액세스 토큰 만료시간
+	@Value("${tokenExpirationMsec}")
+	private Long tokenExpirationMsec;
+
+	// 리프레시 토큰 만료시간
+	@Value("${refreshTokenExpirationMsec}")
+	private Long refreshTokenExpirationMsec;
 
 	private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
 	private static final String AUTHORITIES_KEY = "auth";
 
 	private final String secret;
-	private final long tokenValidityInMilliseconds;
 
 	private Key key;
 
-	public TokenProvider(@Value("${jwt.secret}") String secret,
-			@Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+	public TokenProvider(@Value("${jwt.secret}") String secret) {
 		this.secret = secret;
-		this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
 	}
 
 	@Override
 	public void afterPropertiesSet() { // InitializingBean 에서 오버라이드 -> 빈이 생성되고 주입된후 시크릿 값을 Base64 Decode해서 key변수에 할당하려고
 		byte[] keyBytes = Decoders.BASE64.decode(secret);
 		this.key = Keys.hmacShaKeyFor(keyBytes);
-	}
-
-	// Authentication 객체의 권한정보를 이용해서 토큰을 생성하는 메소드
-	public String createToken(Authentication authentication) {
-		String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.joining(","));
-
-		long now = (new Date()).getTime();
-		// 만료시간
-		Date validity = new Date(now + this.tokenValidityInMilliseconds);
-
-		// jwt 토큰 생성해서 리턴
-		return Jwts.builder().setSubject(authentication.getName()).claim(AUTHORITIES_KEY, authorities)
-				.signWith(key, SignatureAlgorithm.HS512).setExpiration(validity).compact();
 	}
 
 	// Token에 담겨있는 정보를 이용해 Authentication 객체를 리턴하는 메소드
@@ -99,14 +91,7 @@ public class TokenProvider implements InitializingBean {
 	}
 
 
-	@Value("${tokenSecret}")
-	private String tokenSecret;
 
-	@Value("${tokenExpirationMsec}")
-	private Long tokenExpirationMsec;
-
-	@Value("${refreshTokenExpirationMsec}")
-	private Long refreshTokenExpirationMsec;
 
 	public TokenDto generateAccessToken(String subject) {
 		Date now = new Date();
