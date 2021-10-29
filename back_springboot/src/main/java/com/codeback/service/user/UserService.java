@@ -1,19 +1,129 @@
 package com.codeback.service.user;
 
+import com.codeback.domain.jwt.JwtFilter;
+import com.codeback.domain.jwt.TokenProvider;
+import com.codeback.domain.user.Authority;
+import com.codeback.domain.user.User;
 import com.codeback.domain.user.UserRepository;
-import com.codeback.web.dto.UserSaveRequestDto;
+import com.codeback.util.CookieUtil;
+import com.codeback.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.websocket.EncodeException;
+import java.util.Collections;
+import java.util.Optional;
 
-@RequiredArgsConstructor
+
 @Service
-public class UserService {
-    private final UserRepository userRepository;
+public class UserService  {
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenProvider tokenProvider;
+    @Autowired
+    private CookieUtil cookieUtil;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @Transactional
+    public UserService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public void save(UserSaveRequestDto userRequestDto) {
-        userRepository.save(userRequestDto.toEntity());
+        Authority authority = Authority.builder().authorityName("ROLE_USER").build();
+        User user = User.builder().nickname(userRequestDto.getNickname())
+                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+                .email(userRequestDto.getEmail())
+                .authorities(Collections.singleton(authority))
+                .build();
+
+        userRepository.save(user);
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
+
+    public ResponseEntity<LoginResponseDto> login(LoginRequestDto loginRequest, String accessToken, String refreshToken) {
+        String email = loginRequest.getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found with email " + email));
+
+        Boolean accessTokenValid = tokenProvider.validateToken(accessToken);
+        Boolean refreshTokenValid = tokenProvider.validateToken(refreshToken);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        TokenDto newAccessToken;
+        TokenDto newRefreshToken;
+        if (!accessTokenValid && !refreshTokenValid) {
+            newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
+            newRefreshToken = tokenProvider.generateRefreshToken(user.getEmail());
+            addAccessTokenCookie(responseHeaders, newAccessToken);
+            addRefreshTokenCookie(responseHeaders, newRefreshToken);
+        }
+
+        if (!accessTokenValid && refreshTokenValid) {
+            newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
+            addAccessTokenCookie(responseHeaders, newAccessToken);
+        }
+
+        if (accessTokenValid && refreshTokenValid) {
+            newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
+            newRefreshToken = tokenProvider.generateRefreshToken(user.getEmail());
+            addAccessTokenCookie(responseHeaders, newAccessToken);
+            addRefreshTokenCookie(responseHeaders, newRefreshToken);
+        }
+
+        LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
+        return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
+
+    }
+    public ResponseEntity<LoginResponseDto> refresh(String accessToken, String refreshToken) {
+        Boolean refreshTokenValid = tokenProvider.validateToken(refreshToken);
+        if (!refreshTokenValid) {
+            throw new IllegalArgumentException("Refresh Token is invalid!");
+        }
+
+        String currentUserEmail = tokenProvider.getUsernameFromToken(accessToken);
+
+        TokenDto newAccessToken = tokenProvider.generateAccessToken(currentUserEmail);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(newAccessToken.getTokenValue(), newAccessToken.getDuration()).toString());
+
+        LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
+        return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
+    }
+
+    public UserSummary getUserProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userRepository.findByEmail(customUserDetails.getUsername()).orElseThrow(() -> new IllegalArgumentException("User not found with email " + customUserDetails.getUsername()));
+        return user.toUserSummary();
+    }
+
+    private void addAccessTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
+        httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(token.getTokenValue(), token.getDuration()).toString());
+    }
+
+    private void addRefreshTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
+        httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(token.getTokenValue(), token.getDuration()).toString());
     }
 }
