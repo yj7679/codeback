@@ -1,4 +1,6 @@
 :root {
+  --main-background-color: #b24592;
   --header-background: whitesmoke;
   --error-title: #979797;
+  --logo-color: whitesmoke;
 }

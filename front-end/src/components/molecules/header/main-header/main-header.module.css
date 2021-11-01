@@ -1,0 +1,9 @@
+@import 'assets/css/color.css';
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit;
+  padding: 1.5em;
+}

@@ -1,0 +1,6 @@
+@import 'assets/css/color.css';
+
+.studyBtn {
+  color: var(--main-background-color);
+  background-color: whitesmoke;
+}
