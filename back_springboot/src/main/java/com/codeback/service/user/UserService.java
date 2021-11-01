@@ -59,7 +59,9 @@ public class UserService  {
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
+    public Optional<User> findUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
 
 
     public ResponseEntity<LoginResponseDto> login(LoginRequestDto loginRequest, String accessToken, String refreshToken) {
@@ -126,4 +128,12 @@ public class UserService  {
     private void addRefreshTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(token.getTokenValue(), token.getDuration()).toString());
     }
+
+    public ResponseEntity<?> addSignUpCookie() {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createSignUpCookie().toString());
+
+        return ResponseEntity.ok().headers(responseHeaders).body("SUCCESS");
+    }
+
 }
