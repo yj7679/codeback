@@ -23,3 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 
 /data/certbot
+
+# cypress
+cypress/videos
+cypress/screenshots
+.nyc_output
