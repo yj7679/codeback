@@ -1,14 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { CssKeyObject } from 'types/common';
-
-const styles: CssKeyObject = {
-  logoBtn: {
-    fontFamily: 'logoFont',
-    fontSize: '1.2rem'
-  }
-};
+import styles from './logo-btn.module.css';
 
 const LogoBtn = () => {
   const history = useHistory();
@@ -17,7 +10,7 @@ const LogoBtn = () => {
   };
 
   return (
-    <Button type="link" size="large" onClick={goToMain} style={styles.logoBtn}>
+    <Button className={styles.logoBtn} type="link" size="large" onClick={goToMain}>
       코드백
     </Button>
   );
