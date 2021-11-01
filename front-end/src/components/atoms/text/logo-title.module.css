@@ -1,0 +1,62 @@
+.logoTitleSvg text {
+  font-size: 6em;
+  fill: transparent;
+  stroke-dasharray: 326px;
+  animation: stroke 1s linear;
+  animation-fill-mode: forwards;
+}
+.ab {
+  line-height: 1.6;
+}
+.logoTitleSvg text:nth-child(1) {
+  animation-delay: 0s;
+}
+.logoTitleSvg text:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.logoTitleSvg text:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.logoTitleSvg text:nth-child(4) {
+  animation-delay: 0.9s;
+}
+.logoTitleSvg text:nth-child(5) {
+  animation-delay: 1.2s;
+}
+.logoTitleSvg text:nth-child(6) {
+  animation-delay: 1.5s;
+}
+.logoTitleSvg text:nth-child(7) {
+  animation-delay: 1.8s;
+}
+.logoTitleSvg text:nth-child(8) {
+  animation-delay: 2.1s;
+}
+.logoTitleSvg text:nth-child(9) {
+  animation-delay: 2.4s;
+}
+.logoTitleSvg text:nth-child(10) {
+  animation-delay: 2.7s;
+}
+.logoTitleSvg text:nth-child(11) {
+  animation-delay: 3s;
+}
+
+@keyframes stroke {
+  0% {
+    stroke: whitesmoke;
+    stroke-width: 3px;
+    stroke-dashoffset: 326px;
+  }
+  70% {
+    fill: transparent;
+  }
+  98% {
+    stroke: whitesmoke;
+    stroke-width: 3px;
+  }
+  100% {
+    fill: whitesmoke;
+    stroke-dashoffset: 0px;
+  }
+}
