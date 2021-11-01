@@ -95,7 +95,7 @@ public class TokenProvider implements InitializingBean {
 
 	public TokenDto generateAccessToken(String subject) {
 		Date now = new Date();
-		Long duration = now.getTime() + tokenExpirationMsec;
+		Long duration = tokenExpirationMsec;
 		Date expiryDate = new Date(duration);
 
 		String token = Jwts.builder()
@@ -109,7 +109,7 @@ public class TokenProvider implements InitializingBean {
 
 	public TokenDto generateRefreshToken(String subject) {
 		Date now = new Date();
-		Long duration = now.getTime() + refreshTokenExpirationMsec;
+		Long duration = refreshTokenExpirationMsec;
 		Date expiryDate = new Date(duration);
 		String token = Jwts.builder()
 				.setSubject(subject)

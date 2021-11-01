@@ -17,11 +17,13 @@ public class CookieUtil {
     @Value("${refreshTokenCookieName}")
     private String refreshTokenCookieName;
 
+    @Value("${signUpCookieName}")
+    private String signUpCookieName;
+
     public HttpCookie createAccessTokenCookie(String token, Long duration) {
         String encryptedToken = SecurityCipher.encrypt(token);
         return ResponseCookie.from(accessTokenCookieName, encryptedToken)
                 .maxAge(duration)
-                .httpOnly(true)
                 .path("/")
                 .build();
     }
@@ -30,13 +32,18 @@ public class CookieUtil {
         String encryptedToken = SecurityCipher.encrypt(token);
         return ResponseCookie.from(refreshTokenCookieName, encryptedToken)
                 .maxAge(duration)
-                .httpOnly(true)
                 .path("/")
                 .build();
     }
 
     public HttpCookie deleteAccessTokenCookie() {
-        return ResponseCookie.from(accessTokenCookieName, "").maxAge(0).httpOnly(true).path("/").build();
+        return ResponseCookie.from(accessTokenCookieName, "").maxAge(0).path("/").build();
     }
 
+    public HttpCookie createSignUpCookie() {
+        return ResponseCookie.from(signUpCookieName, "ThisIsCookieForSignUp")
+                .maxAge(30000)
+                .path("/")
+                .build();
+    }
 }

@@ -78,8 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// .antMatchers(path).permitAll() -> 해당 패스에 대한 요청은 인증없이 접근을 허용하겠다는 뜻
 
 				.and().authorizeRequests().antMatchers("/auth/authenticate")
-				.permitAll().antMatchers("/user/signup").permitAll().antMatchers("/user/pass/**").permitAll()
-				.antMatchers("/phone/**").permitAll().antMatchers("/user/crop/top/**").permitAll()
+				.permitAll().antMatchers("/user/signup").permitAll().antMatchers("/auth/email/req").permitAll()
+				.antMatchers("/user/signup/page").permitAll().antMatchers("/user/crop/top/**").permitAll()
 				.antMatchers("/post/top/**").permitAll().antMatchers("/post/type/**").permitAll()
 				.antMatchers("/post/infinite").permitAll().antMatchers("/guide/plant/").permitAll()
 				.antMatchers("/guide/plant/summary").permitAll().antMatchers("/guide/plant/*").permitAll()
