@@ -8,7 +8,7 @@ export { default as LogoTitle } from './atoms/text/logo-title';
 export { default as PageLoading } from './atoms/loading/page-loading';
 
 /* molecules */
-export { default as MainHeader } from './molecules/header/main-header';
+export { default as MainHeader } from './molecules/header/main-header/main-header';
 export { default as StudyHeader } from './molecules/header/study-header';
 export { default as LoginModal } from './molecules/modal/login-modal';
 export { default as SignupForm } from './molecules/form/signup-form';
