@@ -1,7 +1,7 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import { Select } from 'antd';
 import useEditor from 'hooks/useEditor';
-import { observer } from 'mobx-react-lite';
 import { OptionType } from 'stores/editor/model/editor-model';
 import { CssKeyObject } from 'types/common';
 
@@ -44,8 +44,8 @@ const EditorMenu = observer(() => {
         defaultValue={editor.theme}
         style={{ ...styles.option, ...styles.theme }}
         onChange={handleThemeChange}>
-        <Option value="material-darker">Dark</Option>
-        <Option value="eclipse">Bright</Option>
+        <Option value="Dark">Dark</Option>
+        <Option value="Bright">Bright</Option>
       </Select>
 
       <Select

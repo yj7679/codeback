@@ -16,7 +16,7 @@ export class EditorImpl implements Editor {
 
   fontSize = { value: '16', label: '16' };
 
-  theme: OptionType = { value: 'material-darker', label: 'Dark' };
+  theme: OptionType = { value: 'Bright', label: 'Bright' };
 
   constructor() {
     makeAutoObservable(this);
