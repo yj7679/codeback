@@ -15,6 +15,8 @@ public class CorsConfig {
       CorsConfiguration config = new CorsConfiguration();
       config.setAllowCredentials(true);
       config.addAllowedOrigin("http://localhost:3000");
+      config.addAllowedOrigin("http://k5b304.p.ssafy.io:3000");
+      config.addAllowedOrigin("http://codeback.net:3000");
       config.addAllowedHeader("*");
       config.addAllowedMethod("*");
       

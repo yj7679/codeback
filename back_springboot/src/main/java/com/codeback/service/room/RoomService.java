@@ -22,9 +22,9 @@ public class RoomService {
 
     // 사용자 닉네임과 현재 시각으로 HASHING해서 RoomId만들어서 저장하고 return하고
     @Transactional
-    public String makeRoom(String nickname) {
+    public String makeRoom(String email) {
 
-        Optional<User> user = userRepository.findByNickname(nickname);
+        Optional<User> user = userRepository.findByEmail(email);
         User userEntity = user.get();
         System.out.println(userEntity);
         long time = System.currentTimeMillis();
@@ -32,7 +32,7 @@ public class RoomService {
         // 초단위까지해서 유일 값 만들기
         String t = Long.toString(time);
 
-        String roomId = nickname + t;
+        String roomId = email + t;
         // room table에 추가
         Room room = Room.builder()
                 .user(userEntity)
