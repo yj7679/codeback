@@ -5,7 +5,7 @@ import { MainHeader } from 'components';
 
 const styles: CssKeyObject = {
   container: {
-    height: '90vh',
+    height: '100vh',
     lineHeight: '90vh',
     textAlign: 'center',
     backgroundColor: 'white'
