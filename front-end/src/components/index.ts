@@ -5,6 +5,8 @@ export { default as LogoBtn } from './atoms/btn/logo-btn/logo-btn';
 export { default as UrlCopyBtn } from './atoms/btn/url-copy-btn/url-copy-btn';
 export { default as Editor } from './atoms/editor/editor';
 export { default as LogoTitle } from './atoms/text/logo-title';
+export { default as DataInput } from './atoms/data-input/data-input';
+export { default as DataOutput } from './atoms/data-output/data-output';
 
 export { default as PageLoading } from './atoms/loading/page-loading';
 
