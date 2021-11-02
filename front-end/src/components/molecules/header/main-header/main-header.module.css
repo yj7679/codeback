@@ -1,9 +1,11 @@
 @import 'assets/css/color.css';
 
-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: inherit;
   padding: 1.5em;
+  background: var(--main-background-color);
+  background: -webkit-linear-gradient(to right, #f15f79, #b24592);
+  background: linear-gradient(to right, #f15f79, #b24592);
 }

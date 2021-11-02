@@ -3,9 +3,6 @@
 
 body {
   font-family: 'defaultFont';
-  background: var(--main-background-color);
-  background: -webkit-linear-gradient(to right, #f15f79, #b24592);
-  background: linear-gradient(to right, #f15f79, #b24592);
 }
 
 /* remote */
