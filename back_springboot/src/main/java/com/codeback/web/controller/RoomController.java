@@ -1,6 +1,7 @@
 package com.codeback.web.controller;
 
 import com.codeback.service.room.RoomService;
+import com.codeback.util.SecurityCipher;
 import com.codeback.web.dto.RoomSaveRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,4 +28,11 @@ public class RoomController {
         return roomService.makeRoom(roomSaveRequestDto.getNickname());
     }
 
+    @ApiOperation(value = "찐 방만들기", notes = "닉네임을 입력받아서 방을 만듭니다.")
+    @PostMapping("/makeroom")
+    public String read_makeRoom(@CookieValue(name = "accessToken", required = false) String accessToken){
+        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+        System.out.println(decryptedAccessToken);
+        return "abc";
+    }
 }
