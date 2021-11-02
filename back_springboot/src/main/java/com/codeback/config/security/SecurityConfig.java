@@ -4,6 +4,9 @@ import com.codeback.domain.jwt.JwtAccessDeniedHandler;
 import com.codeback.domain.jwt.JwtAuthenticationEntryPoint;
 import com.codeback.domain.jwt.JwtSecurityConfig;
 import com.codeback.domain.jwt.TokenProvider;
+import com.codeback.service.user.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,9 +20,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
+@Configuration
 @EnableWebSecurity // 기본적인 Web 보안을 활성화 하겠다는 뜻
 @EnableGlobalMethodSecurity(prePostEnabled = true) // @PreAuthorize어노테이션을 메소드단위로 사용하기 위해 적용
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
 
 	private final TokenProvider tokenProvider;
 	private final CorsFilter corsFilter;
@@ -77,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// authorizeRequests -> HttpServeletRequest를 사용하는 요청들에 대한 접근제한을 설정하겠다는 뜻
 				// .antMatchers(path).permitAll() -> 해당 패스에 대한 요청은 인증없이 접근을 허용하겠다는 뜻
 
-				.and().authorizeRequests().antMatchers("/auth/authenticate")
+				.and().authorizeRequests().antMatchers("/auth/login")
 				.permitAll().antMatchers("/user/signup").permitAll().antMatchers("/auth/email/req").permitAll()
 				.antMatchers("/user/signup/page").permitAll().antMatchers("/user/crop/top/**").permitAll()
 				.antMatchers("/post/top/**").permitAll().antMatchers("/post/type/**").permitAll()
