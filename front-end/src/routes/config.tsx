@@ -37,7 +37,7 @@ export const routes: RouteType[] = [
     path: '*',
     exact: true,
     private: false,
-    component: lazy(() => import('pages/error/not-found')),
+    component: lazy(() => import('pages/error/not-found/not-found')),
     fallback: <PageLoading />
   }
 ];
