@@ -62,7 +62,7 @@ public class AuthController {
     }
 
     // 로그인 및 토큰 발급
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     @ApiOperation(value = "로그인 및 인증", notes = "로그인 및 인증 토큰을 헤더 및 바디를 통해 반환", response = TokenDto.class)
     public ResponseEntity<LoginResponseDto> login(
             @CookieValue(name = "accessToken", required = false) String accessToken,

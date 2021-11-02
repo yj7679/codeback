@@ -42,7 +42,7 @@ public class CookieUtil {
 
     public HttpCookie createSignUpCookie() {
         return ResponseCookie.from(signUpCookieName, "ThisIsCookieForSignUp")
-                .maxAge(30000)
+                .maxAge(300000)
                 .path("/")
                 .build();
     }

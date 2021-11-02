@@ -1,11 +1,19 @@
 package com.codeback.domain.jwt;
 
 import com.codeback.util.SecurityCipher;
+import com.codeback.web.dto.LoginedUser;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -16,20 +24,23 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class JwtFilter extends GenericFilterBean {
 
 	// JWT를 위한 커스텀 필터
 
 	@Value("${accessTokenCookieName}")
-	private String accessTokenCookieName;
+	private String accessTokenCookieName = "accessToken";
 
 	@Value("${refreshTokenCookieName}")
-	private String refreshTokenCookieName;
+	private String refreshTokenCookieName = "refreshToken";
 	private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-
+	String key ="c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK";
 	private TokenProvider tokenProvider;
 
 	public JwtFilter(TokenProvider tokenProvider) {
@@ -44,13 +55,26 @@ public class JwtFilter extends GenericFilterBean {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		//리퀘스트에서 토큰을 받는다
-		String jwt = resolveToken(httpServletRequest);
+		String jwt = getJwtFromCookie(httpServletRequest);
+
+		System.out.println("여기 jwt");
+		System.out.println(jwt);
 		String requestURI = httpServletRequest.getRequestURI();
 
 		//토큰의 유효성 검증
 		if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 			//토큰이 정상이면 토큰에서 authentication객체 받아온다
-			Authentication authentication = tokenProvider.getAuthentication(jwt);
+			String userEmail = tokenProvider.getUsernameFromToken(jwt);
+			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+			System.out.println("zzsd");
+			System.out.println(claims.toString());
+			Collection<? extends GrantedAuthority> authorities = Arrays
+					.stream("USER".split(",")).map(SimpleGrantedAuthority::new)
+					.collect(Collectors.toList());
+			LoginedUser userDetails = new LoginedUser(userEmail, "USER");
+
+			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
 			//이후 SecurityContex에 set 한다
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
@@ -83,6 +107,10 @@ public class JwtFilter extends GenericFilterBean {
 
 	private String getJwtFromCookie(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
+		if(cookies==null){
+			return null;
+		}
+
 		for (Cookie cookie : cookies) {
 			if (accessTokenCookieName.equals(cookie.getName())) {
 				String accessToken = cookie.getValue();

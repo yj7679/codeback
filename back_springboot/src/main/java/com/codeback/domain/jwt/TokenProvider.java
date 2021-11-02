@@ -77,6 +77,7 @@ public class TokenProvider implements InitializingBean {
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			logger.info("올바른 JWT");
 			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			logger.info("잘못된 JWT 서명입니다.");
@@ -95,7 +96,7 @@ public class TokenProvider implements InitializingBean {
 
 	public TokenDto generateAccessToken(String subject) {
 		Date now = new Date();
-		Long duration = tokenExpirationMsec;
+		Long duration = now.getTime() + tokenExpirationMsec;
 		Date expiryDate = new Date(duration);
 
 		String token = Jwts.builder()
@@ -109,7 +110,7 @@ public class TokenProvider implements InitializingBean {
 
 	public TokenDto generateRefreshToken(String subject) {
 		Date now = new Date();
-		Long duration = refreshTokenExpirationMsec;
+		Long duration = now.getTime() + refreshTokenExpirationMsec;
 		Date expiryDate = new Date(duration);
 		String token = Jwts.builder()
 				.setSubject(subject)
