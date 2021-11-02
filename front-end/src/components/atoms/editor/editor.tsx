@@ -7,7 +7,7 @@ import { Controlled as CodeMirror } from 'react-codemirror2';
 import { Editor as CodeMirrorEditor } from 'codemirror';
 import './editor-addon';
 import useEditor from 'hooks/useEditor';
-import { setLanguageString } from './util';
+import { getBackgroundColor, setLanguageString, setThemeString } from './util';
 
 type EditorProps = {
   cellId: string;
@@ -62,7 +62,13 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
   }, [cellId, cursorColor, userName]);
 
   return (
-    <div style={{ width: '100%', height: '100%', fontSize: `${editorStore.fontSize.value}px` }}>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        fontSize: `${editorStore.fontSize.value}px`,
+        backgroundColor: getBackgroundColor(editorStore.theme.value)
+      }}>
       <CodeMirror
         value={editorStore.code}
         autoScroll
@@ -71,7 +77,7 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
           editorStore.code = value;
         }}
         options={{
-          theme: editorStore.theme.value,
+          theme: setThemeString(editorStore.theme.value),
           mode: setLanguageString(editorStore.language.value),
           lineNumbers: true,
           lineWrapping: true,
