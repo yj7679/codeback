@@ -1,0 +1,9 @@
+@import 'assets/css/color.css';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: whitesmoke;
+  padding: 1em;
+}
