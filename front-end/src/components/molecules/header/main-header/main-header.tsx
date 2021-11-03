@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { LoginBtn, LoginModal, LogoBtn } from 'components';
+import { observer } from 'mobx-react-lite';
 import styles from './main-header.module.css';
+import { AvatarBtn, LoginBtn, LoginModal, LogoBtn } from 'components';
+import useAuth from 'hooks/useAuth';
 
-const MainHeader = () => {
+const MainHeader = observer(() => {
   const [visible, setVisible] = useState(false);
+  const auth = useAuth();
 
   return (
     <header className={styles.header}>
       <LogoBtn />
-      <LoginBtn onClick={() => setVisible(true)} />
+      {auth.authenticated ? <AvatarBtn /> : <LoginBtn onClick={() => setVisible(true)} />}
       <LoginModal visible={visible} setVisible={setVisible} />
     </header>
   );
-};
+});
 
 export default MainHeader;

@@ -16,11 +16,12 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "room_number")
     private long roomNumber;
 
     // 1:1 단방향 //
     @OneToOne
-    @JoinColumn(name="userNumber")
+    @JoinColumn(name="user_number")
     private User user;
 
     @NotBlank
