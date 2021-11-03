@@ -15,4 +15,5 @@ export { default as MainHeader } from './molecules/header/main-header/main-heade
 export { default as StudyHeader } from './molecules/header/study-header/study-header';
 export { default as LoginModal } from './molecules/modal/login-modal';
 export { default as SignupForm } from './molecules/form/signup-form';
+export { default as LoginForm } from './molecules/form/login-form/login-form';
 export { default as EditorMenu } from './molecules/menu/editor-menu';
