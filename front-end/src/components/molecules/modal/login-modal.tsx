@@ -1,8 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Modal, Typography, Form, Input, Button } from 'antd';
+import { Modal, Typography } from 'antd';
 import { CssKeyObject } from 'types/common';
-import inputValidator from 'util/input-validator';
+import { LoginForm } from 'components';
 
 const { Title } = Typography;
 
@@ -28,23 +27,7 @@ type LoginModalProps = {
   setVisible: (isShow: boolean) => void;
 };
 
-type LoginValues = {
-  email: string;
-  password: string;
-};
-
 const LoginModal = ({ visible, setVisible }: LoginModalProps) => {
-  const history = useHistory();
-
-  const onFinish = (values: LoginValues) => {
-    console.log(values);
-  };
-
-  const goToSignUp = () => {
-    setVisible(false);
-    history.push('/signup');
-  };
-
   return (
     <Modal
       centered
@@ -55,34 +38,7 @@ const LoginModal = ({ visible, setVisible }: LoginModalProps) => {
       bodyStyle={styles.loginModal}
       footer={null}>
       <Title style={styles.modalTitle}>코드백</Title>
-      <Form name="validate_other" onFinish={onFinish}>
-        <Form.Item
-          name="email"
-          rules={[
-            {
-              validator: inputValidator.checkEmail
-            }
-          ]}>
-          <Input type="email" placeholder="이메일" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              validator: inputValidator.checkPassword
-            }
-          ]}>
-          <Input type="password" placeholder="비밀번호" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" style={styles.btn}>
-            로그인
-          </Button>
-          <Button type="default" onClick={goToSignUp} style={styles.btn}>
-            회원가입
-          </Button>
-        </Form.Item>
-      </Form>
+      <LoginForm setVisible={setVisible} />
     </Modal>
   );
 };
