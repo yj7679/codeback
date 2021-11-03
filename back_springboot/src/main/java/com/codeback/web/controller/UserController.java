@@ -40,16 +40,5 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "회원가입페이지로 이동", notes = "회원가입 전 쿠키에 회원가입 허가인증 정보를 넣습니다.")
-    @GetMapping("/signup/page")
-    public ResponseEntity<?> signupPage(){
-        try {
-            ResponseEntity<?> res = userService.addSignUpCookie();
-            System.out.println(res.getHeaders().toString());
-            return res; //duration : 300sec
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+
 }

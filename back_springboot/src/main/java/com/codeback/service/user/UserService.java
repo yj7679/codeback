@@ -121,11 +121,11 @@ public class UserService  {
         return user.toUserSummary();
     }
 
-    private void addAccessTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
+    public void addAccessTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(token.getTokenValue(), token.getDuration()).toString());
     }
 
-    private void addRefreshTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
+    public void addRefreshTokenCookie(HttpHeaders httpHeaders, TokenDto token) {
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(token.getTokenValue(), token.getDuration()).toString());
     }
 

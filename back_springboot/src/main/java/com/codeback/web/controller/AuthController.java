@@ -70,8 +70,8 @@ public class AuthController {
             @Valid @RequestBody LoginRequestDto loginDto
     ){
 
-        Optional<User> user = userService.findUserByEmail(loginDto.getEmail());
-
+        Optional<User> userOptional = userService.findUserByEmail(loginDto.getEmail());
+        User user = userOptional.get();
         System.out.println(loginDto.getEmail());
         System.out.println(loginDto.getPassword());
         // id,passoword를 통해 UsernamePasswordAuthenticationToken을 생성
@@ -83,11 +83,16 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
-        return userService.login(loginDto, decryptedAccessToken, decryptedRefreshToken);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        TokenDto newAccessToken;
+        TokenDto newRefreshToken;
 
-
+        newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
+        newRefreshToken = tokenProvider.generateRefreshToken(user.getEmail());
+        userService.addAccessTokenCookie(responseHeaders, newAccessToken);
+        userService.addRefreshTokenCookie(responseHeaders, newRefreshToken);
+        LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
+        return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
     }
 
 
@@ -180,5 +185,16 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    
+    @ApiOperation(value = "회원가입페이지로 이동", notes = "회원가입 전 쿠키에 회원가입 허가인증 정보를 넣습니다.")
+    @GetMapping("/startsignup")
+    public ResponseEntity<?> signupPage(){
+        try {
+            ResponseEntity<?> res = userService.addSignUpCookie();
+            System.out.println(res.getHeaders().toString());
+            return res; //duration : 300sec
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
