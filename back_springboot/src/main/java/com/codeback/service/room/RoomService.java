@@ -26,7 +26,6 @@ public class RoomService {
 
         Optional<User> user = userRepository.findByEmail(email);
         User userEntity = user.get();
-        System.out.println(userEntity);
         long time = System.currentTimeMillis();
 
         // 초단위까지해서 유일 값 만들기
@@ -43,5 +42,14 @@ public class RoomService {
 
     }
 
+    @Transactional
+    public void deleteRoom(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        User user = userOptional.get();
 
+
+        roomRepository.deleteByUserUserNumber(user.getUserNumber());
+
+
+    }
 }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Struct;
@@ -65,15 +66,19 @@ public class AuthController {
     @PostMapping("/login")
     @ApiOperation(value = "로그인 및 인증", notes = "로그인 및 인증 토큰을 헤더 및 바디를 통해 반환", response = TokenDto.class)
     public ResponseEntity<LoginResponseDto> login(
-            @CookieValue(name = "accessToken", required = false) String accessToken,
-            @CookieValue(name = "refreshToken", required = false) String refreshToken,
             @Valid @RequestBody LoginRequestDto loginDto
     ){
 
         Optional<User> userOptional = userService.findUserByEmail(loginDto.getEmail());
+
+        // 아이디 틀리면 401 RETURN
+        if(!userOptional.isPresent()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // 비밀번호 틀리면 알아서 401 RETURN
         User user = userOptional.get();
-        System.out.println(loginDto.getEmail());
-        System.out.println(loginDto.getPassword());
+
         // id,passoword를 통해 UsernamePasswordAuthenticationToken을 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), loginDto.getPassword());
@@ -104,10 +109,10 @@ public class AuthController {
         return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }
 
-    @GetMapping(value = "duplicate/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "duplicate/email/{email:}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> duplicateEmailCheck(@PathVariable String email) {
         Optional<User> user = userService.findUserByEmail(email);
-        if(user.isPresent())
+        if(!user.isPresent())
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -115,7 +120,7 @@ public class AuthController {
     @GetMapping(value = "duplicate/nickname/{nickname}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> duplicateNickNameCheck(@PathVariable String nickname) {
         Optional<User> user = userService.findUserByNickname(nickname);
-        if(user.isPresent())
+        if(!user.isPresent())
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -124,10 +129,13 @@ public class AuthController {
     public ResponseEntity<?> emailAuth(HttpServletRequest request, @RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
         String email = requestDto.getEmail();
         Optional<User> user = userService.findUserByEmail(email);
-        System.out.println(email);
-        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+
         Cookie[] cookies = request.getCookies();
-        System.out.println(cookies.length);
+        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+        // 이메일이 db에있는 거면 잘못된 접근
+        if(cookies == null || user.isPresent()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         for (Cookie cookie : cookies) {
 
             if (signUpCookieName.equals(cookie.getName())) {
@@ -184,14 +192,70 @@ public class AuthController {
         emailService.sendMail(email, "[CodeBack] 회원가입 인증 메일", emailcontent.toString());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @ApiOperation(value = "Email Auth Confirm", notes = "메일로 받은 인증번호를 누르고 확인")
+    @PostMapping(value = "email/confirm")
+    public ResponseEntity<?> emailConfirm(HttpServletRequest request, @RequestBody EmailAuthConfirmDto requestDto) {
+        String code = requestDto.getCode();
+        String email = requestDto.getEmail();
 
+        Optional<User> user = userService.findUserByEmail(email);
+
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+        String storedCode = vop.get(email);
+
+
+        Cookie[] cookies = request.getCookies();
+        boolean check = false;
+        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+        // 이메일이 db에있는 거면 잘못된 접근
+        if(cookies == null || user.isPresent()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        for (Cookie cookie : cookies) {
+            if (signUpCookieName.equals(cookie.getName())) {
+                check = true;
+            }
+        }
+
+        if(!check){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Redis에 저장된 중복검사된 이메일과 같은 경우
+        if(storedCode.equals(code)){
+            return new ResponseEntity<String>("true",HttpStatus.OK);
+        }
+        else{ // 다른 경우
+            return new ResponseEntity<String>("false",HttpStatus.OK);
+
+        }
+
+    }
     @ApiOperation(value = "회원가입페이지로 이동", notes = "회원가입 전 쿠키에 회원가입 허가인증 정보를 넣습니다.")
     @GetMapping("/startsignup")
     public ResponseEntity<?> signupPage(){
         try {
             ResponseEntity<?> res = userService.addSignUpCookie();
-            System.out.println(res.getHeaders().toString());
             return res; //duration : 300sec
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ApiOperation(value = "로그아웃", notes = "로그아웃")
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response){
+        try {
+            Cookie accessToken = new Cookie("accessToken", null);
+            Cookie refreshToken = new Cookie("refreshToken", null);
+            accessToken.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
+            refreshToken.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
+            accessToken.setPath("/");
+            refreshToken.setPath("/"); // 모든 경로에서 삭제 됬음을 알린다.
+            response.addCookie(accessToken);
+            response.addCookie(refreshToken);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
