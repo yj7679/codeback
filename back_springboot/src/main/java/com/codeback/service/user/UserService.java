@@ -55,6 +55,27 @@ public class UserService  {
 
         userRepository.save(user);
     }
+    @Transactional
+    public void save(UserUpdateRequestDto userUpdateRequestDto) {
+        //Transactional 을 달면 업데이트 이후에 save 안해도 영속성이 끝나는 시점에서 자동 저장됨
+        Optional<User> user = findUserByEmail(userUpdateRequestDto.getEmail());
+
+        user.ifPresent(selectUser -> {
+            selectUser.setNickname((userUpdateRequestDto.getNickname()));
+            selectUser.setPassword(passwordEncoder.encode(userUpdateRequestDto.getPassword()));
+
+            //userRepository.save(selectUser);
+        });
+    }
+
+    public void deleteUser(String email) {
+        Optional<User> user = findUserByEmail(email);
+
+        user.ifPresent(selectUser -> {
+            System.out.println("이메일이 있는사람이라 탈퇴해야함");
+            userRepository.delete(selectUser);
+        });
+    }
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);

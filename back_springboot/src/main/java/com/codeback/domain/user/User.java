@@ -5,12 +5,14 @@ import com.codeback.web.dto.UserSummary;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "user")
