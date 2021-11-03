@@ -17,6 +17,7 @@ export const COMPLETE_STUDY_URL_COPY = '방 주소 복사 완료';
 
 /* login */
 export const FAIL_TO_LOGIN = '로그인에 실패하셨습니다.';
+export const SUCCESS_TO_LOGIN = '로그인에 성공했습니다.';
 
 /* logout */
 export const FAIL_TO_LOGOUT = '로그아웃에 실패하셨습니다.';
