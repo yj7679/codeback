@@ -11,9 +11,6 @@ public class UserSaveRequestDto {
     private String email;
     private String nickname;
     private String password;
-    private boolean email_no_duplicate;
-    private boolean email_auth;
-    private boolean nickname_no_duplicate;
 
     @Builder
     public UserSaveRequestDto(String email, String nickname, String password){

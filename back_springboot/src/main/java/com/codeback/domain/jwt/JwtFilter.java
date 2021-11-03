@@ -57,8 +57,7 @@ public class JwtFilter extends GenericFilterBean {
 		//리퀘스트에서 토큰을 받는다
 		String jwt = getJwtFromCookie(httpServletRequest);
 
-		System.out.println("여기 jwt");
-		System.out.println(jwt);
+
 		String requestURI = httpServletRequest.getRequestURI();
 
 		//토큰의 유효성 검증
@@ -66,8 +65,7 @@ public class JwtFilter extends GenericFilterBean {
 			//토큰이 정상이면 토큰에서 authentication객체 받아온다
 			String userEmail = tokenProvider.getUsernameFromToken(jwt);
 			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-			System.out.println("zzsd");
-			System.out.println(claims.toString());
+
 			Collection<? extends GrantedAuthority> authorities = Arrays
 					.stream("USER".split(",")).map(SimpleGrantedAuthority::new)
 					.collect(Collectors.toList());
