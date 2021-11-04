@@ -11,7 +11,7 @@ const app = express();
 const socketio = require('./utils/socket');
 const codeRouter = require('./routes/code');
 
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 8081);
 app.set('view engine', 'html');
 
 app.use(morgan('dev'));
