@@ -6,12 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-
 @NoArgsConstructor
-public class UserSaveRequestDto {
+public class PasswordUpdateRequestDto {
     private String email;
-    private String nickname;
     private String password;
 
-
+    @Builder
+    public PasswordUpdateRequestDto(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
 }

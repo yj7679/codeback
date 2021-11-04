@@ -109,7 +109,7 @@ public class AuthController {
         return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }
 
-    @GetMapping(value = "duplicate/email/{email:}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "duplicate/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> duplicateEmailCheck(@PathVariable String email) {
         Optional<User> user = userService.findUserByEmail(email);
         if(!user.isPresent())
@@ -192,6 +192,8 @@ public class AuthController {
         emailService.sendMail(email, "[CodeBack] 회원가입 인증 메일", emailcontent.toString());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
     @ApiOperation(value = "Email Auth Confirm", notes = "메일로 받은 인증번호를 누르고 확인")
     @PostMapping(value = "email/confirm")
     public ResponseEntity<?> emailConfirm(HttpServletRequest request, @RequestBody EmailAuthConfirmDto requestDto) {
@@ -229,8 +231,121 @@ public class AuthController {
             return new ResponseEntity<String>("false",HttpStatus.OK);
 
         }
-
     }
+
+    //----------------비밀번호 찾기용 이메일 인증 시작
+    @PostMapping(value = "emailWithPassword/req")
+    public ResponseEntity<?> emailAuthWithPassword(HttpServletRequest request, @RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
+        String email = requestDto.getEmail();
+        Optional<User> user = userService.findUserByEmail(email);
+
+
+        Cookie[] cookies = request.getCookies();
+        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+        // 이메일이 db에없는 거면 잘못된 접근
+        if(cookies == null || !user.isPresent()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        for (Cookie cookie : cookies) {
+
+            if (signUpCookieName.equals(cookie.getName())) {
+
+                String signUpCookie = cookie.getValue();
+                if (signUpCookie == null)
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        // 6자리수 랜덤 수 생성
+        StringBuffer emailcontent = new StringBuffer();
+        Random random = new Random();
+        StringBuffer buffer = new StringBuffer();
+        int num = 0;
+
+        while(buffer.length() < 6) {
+            num = random.nextInt(10);
+            buffer.append(num);
+        }
+
+        String auth_code = buffer.toString();
+
+        // 생성된 코드를 redis에 key: email value:auth code로 저장
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+        vop.set(email, auth_code);
+
+        emailcontent.append("<!DOCTYPE html>");
+        emailcontent.append("<html>");
+        emailcontent.append("<head>");
+        emailcontent.append("</head>");
+        emailcontent.append("<body>");
+        emailcontent.append(
+                " <div" 																																																	+
+                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 400px; height: 600px; border-top: 4px solid #DF01A5; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
+                        "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">"																															+
+                        "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">CODE BACK</span><br />"																													+
+                        "		<span style=\"color: #FA58D0\">본인인증</span> 안내입니다."																																				+
+                        "	</h1>\n"																																																+
+                        "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																																													+
+                        "		비밀번호를 찾기위한 이메일 인증 요청 메일입니다.<br />"																																						+
+                        "		아래 <b style=\"color: #FA58D0\">'메일 인증'</b> 코드를 입력 하셔서 본인확인을 완료해주세요.<br />"																													+
+                        "		감사합니다."																																															+
+                        "	</p>"																																																	+
+                        "		<p"																																																	+
+                        "			style=\"display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #F6CEEC; line-height: 45px; vertical-align: middle; font-size: 16px;\">"							+
+                        "			code : " +auth_code +"</p>"																																														+
+                        "	</a>"																																																	+
+                        "	<div style=\"border-top: 1px solid #DF01A5; padding: 5px;\"></div>"																																		+
+                        " </div>"
+        );
+        emailcontent.append("</body>");
+        emailcontent.append("</html>");
+        emailService.sendMail(email, "[CodeBack] 본인인증 확인 메일", emailcontent.toString());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "Email Auth Confirm WithPassword", notes = "메일로 받은 인증번호를 누르고 확인하면 이메일 인증된 쿠키 전송")
+    @PostMapping(value = "emailWithPassword/confirm")
+    public ResponseEntity<?> emailConfirmWithPassword(HttpServletRequest request, @RequestBody EmailAuthConfirmDto requestDto) {
+        String code = requestDto.getCode();
+        String email = requestDto.getEmail();
+
+        Optional<User> user = userService.findUserByEmail(email);
+
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+        String storedCode = vop.get(email);
+
+
+        Cookie[] cookies = request.getCookies();
+        boolean check = false;
+        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+        // 이메일이 db에없는 거면 잘못된 접근
+        if(cookies == null || !user.isPresent()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        for (Cookie cookie : cookies) {
+            if (signUpCookieName.equals(cookie.getName())) {
+                check = true;
+            }
+        }
+
+        if(!check){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Redis에 저장된 중복검사된 이메일과 같은 경우
+        if(storedCode.equals(code)){
+            ResponseEntity<?> res = userService.addEmailCookie();
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
+        else{ // 다른 경우
+            return new ResponseEntity<String>("false",HttpStatus.OK);
+
+        }
+    }
+
+    //------------------비밀번호찾기용 이메일 인증 끝
+
     @ApiOperation(value = "회원가입페이지로 이동", notes = "회원가입 전 쿠키에 회원가입 허가인증 정보를 넣습니다.")
     @GetMapping("/startsignup")
     public ResponseEntity<?> signupPage(){
