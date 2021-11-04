@@ -131,21 +131,14 @@ public class AuthController {
         String email = requestDto.getEmail();
         Optional<User> user = userService.findUserByEmail(email);
 
-        Cookie[] cookies = request.getCookies();
-        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+
+
         // 이메일이 db에있는 거면 잘못된 접근
-        if(cookies == null || user.isPresent()){
+        if(user.isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        for (Cookie cookie : cookies) {
 
-            if (signUpCookieName.equals(cookie.getName())) {
 
-                String signUpCookie = cookie.getValue();
-                if (signUpCookie == null)
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
+
 
         // 6자리수 랜덤 수 생성
         StringBuffer emailcontent = new StringBuffer();
@@ -207,22 +200,6 @@ public class AuthController {
         String storedCode = vop.get(email);
 
 
-        Cookie[] cookies = request.getCookies();
-        boolean check = false;
-        // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
-        // 이메일이 db에있는 거면 잘못된 접근
-        if(cookies == null || user.isPresent()){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        for (Cookie cookie : cookies) {
-            if (signUpCookieName.equals(cookie.getName())) {
-                check = true;
-            }
-        }
-
-        if(!check){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         // Redis에 저장된 중복검사된 이메일과 같은 경우
         if(storedCode.equals(code)){

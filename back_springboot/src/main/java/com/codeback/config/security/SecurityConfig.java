@@ -91,7 +91,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/user/signup/page").permitAll()
 				.antMatchers("/auth/startsignup").permitAll()
 				.antMatchers("/auth/**").permitAll()
-				.antMatchers("/auth/startsignup").permitAll()
 				.antMatchers("/auth/duplicate/nickname/**").permitAll()
 				.antMatchers("/auth/duplicate/email/**").permitAll()
 
