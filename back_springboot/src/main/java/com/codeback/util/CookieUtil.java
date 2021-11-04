@@ -26,6 +26,7 @@ public class CookieUtil {
                 .maxAge(duration)
                 .httpOnly(true)
                 .path("/")
+                .secure(true)
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class CookieUtil {
         String encryptedToken = SecurityCipher.encrypt(token);
         return ResponseCookie.from(refreshTokenCookieName, encryptedToken)
                 .maxAge(duration)
+                .secure(true)
                 .httpOnly(true)
                 .path("/")
                 .build();
@@ -41,6 +43,7 @@ public class CookieUtil {
     public HttpCookie deleteAccessTokenCookie() {
         return ResponseCookie.from(accessTokenCookieName, "")
                 .maxAge(0)
+                .secure(true)
                 .path("/")
                 .build();
     }
@@ -50,6 +53,7 @@ public class CookieUtil {
                 .maxAge(300000)
                 .path("/")
                 .httpOnly(true)
+                .secure(true)
                 .build();
     }
 }
