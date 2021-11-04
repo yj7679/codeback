@@ -29,6 +29,7 @@ public class CookieUtil {
                 .maxAge(duration)
                 .httpOnly(true)
                 .path("/")
+                .sameSite("None")
                 .secure(true)
                 .build();
     }
@@ -39,6 +40,7 @@ public class CookieUtil {
                 .maxAge(duration)
                 .secure(true)
                 .httpOnly(true)
+                .sameSite("None")
                 .path("/")
                 .build();
     }
@@ -47,6 +49,7 @@ public class CookieUtil {
         return ResponseCookie.from(accessTokenCookieName, "")
                 .maxAge(0)
                 .secure(true)
+                .sameSite("None")
                 .path("/")
                 .build();
     }
@@ -56,6 +59,7 @@ public class CookieUtil {
                 .maxAge(300000)
                 .path("/")
                 .httpOnly(true)
+                .sameSite("None")
                 .secure(true)
                 .build();
     }
@@ -65,6 +69,7 @@ public class CookieUtil {
                 .maxAge(300000)
                 .path("/")
                 .httpOnly(true)
+                .sameSite("None")
                 .build();
     }
 }

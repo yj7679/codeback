@@ -109,15 +109,16 @@ public class AuthController {
         return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }
 
-    @GetMapping(value = "duplicate/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/duplicate/email/{email}")
     public ResponseEntity<?> duplicateEmailCheck(@PathVariable String email) {
         Optional<User> user = userService.findUserByEmail(email);
+        System.out.println(email);
         if(!user.isPresent())
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "duplicate/nickname/{nickname}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/duplicate/nickname/{nickname}")
     public ResponseEntity<?> duplicateNickNameCheck(@PathVariable String nickname) {
         Optional<User> user = userService.findUserByNickname(nickname);
         if(!user.isPresent())
@@ -125,7 +126,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "email/req")
+    @PostMapping(value = "/email/req")
     public ResponseEntity<?> emailAuth(HttpServletRequest request, @RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
         String email = requestDto.getEmail();
         Optional<User> user = userService.findUserByEmail(email);
@@ -195,7 +196,7 @@ public class AuthController {
 
 
     @ApiOperation(value = "Email Auth Confirm", notes = "메일로 받은 인증번호를 누르고 확인")
-    @PostMapping(value = "email/confirm")
+    @PostMapping(value = "/email/confirm")
     public ResponseEntity<?> emailConfirm(HttpServletRequest request, @RequestBody EmailAuthConfirmDto requestDto) {
         String code = requestDto.getCode();
         String email = requestDto.getEmail();
@@ -234,7 +235,7 @@ public class AuthController {
     }
 
     //----------------비밀번호 찾기용 이메일 인증 시작
-    @PostMapping(value = "emailWithPassword/req")
+    @PostMapping(value = "/emailWithPassword/req")
     public ResponseEntity<?> emailAuthWithPassword(HttpServletRequest request, @RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
         String email = requestDto.getEmail();
         Optional<User> user = userService.findUserByEmail(email);
@@ -305,7 +306,7 @@ public class AuthController {
 
 
     @ApiOperation(value = "Email Auth Confirm WithPassword", notes = "메일로 받은 인증번호를 누르고 확인하면 이메일 인증된 쿠키 전송")
-    @PostMapping(value = "emailWithPassword/confirm")
+    @PostMapping(value = "/emailWithPassword/confirm")
     public ResponseEntity<?> emailConfirmWithPassword(HttpServletRequest request, @RequestBody EmailAuthConfirmDto requestDto) {
         String code = requestDto.getCode();
         String email = requestDto.getEmail();

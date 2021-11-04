@@ -44,7 +44,7 @@ public class UserController {
     public ResponseEntity<?> signup(@CookieValue(name = "signUpCookie", required = false) String signUpCookie, @RequestBody UserSaveRequestDto userRequestDto, HttpServletResponse response) {
         try {
             if (signUpCookie == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             } else {
                 userService.save(userRequestDto);
 
