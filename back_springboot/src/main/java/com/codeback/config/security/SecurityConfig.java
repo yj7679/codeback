@@ -90,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/auth/logout").permitAll()
 				.antMatchers("/user/signup/page").permitAll()
 				.antMatchers("/auth/startsignup").permitAll()
-
+				.antMatchers("/auth/**").permitAll()
 				// .anyRequest().authenticated() -> 나머지 요청들은 모두 인증되어야 한다는 뜻
 				.anyRequest().authenticated()
 

@@ -109,7 +109,7 @@ public class AuthController {
         return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }
 
-    @GetMapping(value = "duplicate/email/{email:}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "duplicate/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> duplicateEmailCheck(@PathVariable String email) {
         Optional<User> user = userService.findUserByEmail(email);
         if(!user.isPresent())
