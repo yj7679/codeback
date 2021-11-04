@@ -20,6 +20,9 @@ public class CookieUtil {
     @Value("${signUpCookieName}")
     private String signUpCookieName;
 
+    @Value("${emailCookieName}")
+    private String emailCookieName;
+
     public HttpCookie createAccessTokenCookie(String token, Long duration) {
         String encryptedToken = SecurityCipher.encrypt(token);
         return ResponseCookie.from(accessTokenCookieName, encryptedToken)
@@ -47,6 +50,14 @@ public class CookieUtil {
 
     public HttpCookie createSignUpCookie() {
         return ResponseCookie.from(signUpCookieName, "ThisIsCookieForSignUp")
+                .maxAge(300000)
+                .path("/")
+                .httpOnly(true)
+                .build();
+    }
+
+    public HttpCookie createEmailCookie() {
+        return ResponseCookie.from(emailCookieName, "ThisIsCookieForemail")
                 .maxAge(300000)
                 .path("/")
                 .httpOnly(true)

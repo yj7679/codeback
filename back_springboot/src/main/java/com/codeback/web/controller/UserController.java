@@ -3,6 +3,7 @@ package com.codeback.web.controller;
 import com.codeback.domain.user.User;
 import com.codeback.service.user.UserService;
 import com.codeback.util.SecurityCipher;
+import com.codeback.web.dto.PasswordUpdateRequestDto;
 import com.codeback.web.dto.UserSaveRequestDto;
 import com.codeback.web.dto.UserUpdateRequestDto;
 import io.jsonwebtoken.Claims;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +31,9 @@ public class UserController {
 
     @Value("${tokenSecret}")
     private String key;
+
+    @Value("${emailCookieName}")
+    private String emailCookieName;
 
     @Autowired
     private UserService userService;
@@ -98,6 +103,41 @@ public class UserController {
             result.put("nickname", user.get().getNickname());
 
             return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ApiOperation(value = "비밀번호찾기", notes = "토큰이랑 이메일,비밀번호 받아서 비밀번호만 업데이트")
+    @PutMapping("/passwordUpdate")
+    public ResponseEntity<?> passwordUpdate(HttpServletRequest request, PasswordUpdateRequestDto passwordUpdateRequestDto) {
+        try {
+
+            String email = passwordUpdateRequestDto.getEmail();
+            Optional<User> user = userService.findUserByEmail(email);
+            Cookie[] cookies = request.getCookies();
+            // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
+            // 이메일이 db에없는 거면 잘못된 접근
+            if(cookies == null || !user.isPresent()){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            for (Cookie cookie : cookies) {
+
+                if (emailCookieName.equals(cookie.getName())) {
+
+                    String emailCookie = cookie.getValue();
+                    if (emailCookie == null)
+                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            userService.updatePassword(passwordUpdateRequestDto);
+
+
+            //Optional<User> user = userService.findUserByEmail(claims.get("sub").toString());
+
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -77,6 +77,16 @@ public class UserService  {
         });
     }
 
+    public void updatePassword(PasswordUpdateRequestDto passwordUpdateRequestDto) {
+        Optional<User> user = findUserByEmail(passwordUpdateRequestDto.getEmail());
+
+        user.ifPresent(selectUser -> {
+            selectUser.setPassword(passwordEncoder.encode(passwordUpdateRequestDto.getPassword()));
+            //userRepository.save(selectUser);
+        });
+    }
+
+
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -156,5 +166,13 @@ public class UserService  {
 
         return ResponseEntity.ok().headers(responseHeaders).body("SUCCESS");
     }
+
+    public ResponseEntity<?> addEmailCookie() {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createEmailCookie().toString());
+
+        return ResponseEntity.ok().headers(responseHeaders).body("eMail SUCCESS");
+    }
+
 
 }
