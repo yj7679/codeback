@@ -6,7 +6,7 @@ const styles: CssKeyObject = {
   container: {
     position: 'absolute',
     width: '100%',
-    height: '93vh',
+    height: '100vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
