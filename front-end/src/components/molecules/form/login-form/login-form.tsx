@@ -36,7 +36,9 @@ const LoginForm = ({ setVisible }: { setVisible: (isShow: boolean) => void }) =>
         name="email"
         rules={[
           {
-            validator: inputValidator.checkEmail
+            required: true,
+            message: '이메일을 입력하세요.',
+            validator: inputValidator.checkEmailLoginForm
           }
         ]}>
         <Input type="email" placeholder="이메일" />
