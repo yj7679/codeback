@@ -8,7 +8,9 @@ export { default as LogoTitle } from './atoms/text/logo-title';
 export { default as DataInput } from './atoms/data-input/data-input';
 export { default as DataOutput } from './atoms/data-output/data-output';
 export { default as AvatarBtn } from './atoms/btn/avatar-btn/avatar-btn';
-export { default as PageLoading } from './atoms/loading/page-loading';
+
+/* loading */
+export { default as PageLoading } from './atoms/loading/page-loading/page-loading';
 
 /* molecules */
 export { default as MainHeader } from './molecules/header/main-header/main-header';
