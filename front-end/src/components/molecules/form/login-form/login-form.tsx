@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
+import styles from './login-form.module.css';
 import useAuth from 'hooks/useAuth';
 import inputValidator from 'util/input-validator';
 import { msg } from 'util/message';
 import { LoginValues } from 'stores/auth/model/auth-model';
-import styles from './login-form.module.css';
 import { SUCCESS_TO_LOGIN } from 'common/string-template';
 
 const LoginForm = ({ setVisible }: { setVisible: (isShow: boolean) => void }) => {
@@ -52,7 +52,7 @@ const LoginForm = ({ setVisible }: { setVisible: (isShow: boolean) => void }) =>
         <Input type="password" placeholder="비밀번호" />
       </Form.Item>
       <Form.Item className={styles.btnGroup}>
-        <Button className={styles.btn} type="primary" htmlType="submit">
+        <Button className={styles.loginBtn} type="primary" htmlType="submit">
           로그인
         </Button>
         <Button className={styles.btn} type="default" onClick={goToSignUp}>
