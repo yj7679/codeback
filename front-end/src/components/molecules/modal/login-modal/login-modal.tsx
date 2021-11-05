@@ -14,7 +14,7 @@ const styles: CssKeyObject = {
   modalTitle: {
     marginTop: '.4em',
     fontFamily: 'titleFont',
-    color: '#1890FF'
+    color: '#e05880'
   },
   btn: {
     width: '100%',
