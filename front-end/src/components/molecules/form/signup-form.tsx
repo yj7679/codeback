@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Space } from 'antd';
 import { CssKeyObject } from 'types/common';
+import { SignupValues } from 'stores/auth/model/auth-model';
+import useAuth from 'hooks/useAuth';
+import { msg } from 'util/message';
 import inputValidator from 'util/input-validator';
+import { useHistory } from 'react-router-dom';
 
 const styles: CssKeyObject = {
   loginModal: {
@@ -16,37 +20,53 @@ const styles: CssKeyObject = {
   },
   btn: {
     width: '100%',
-    marginBottom: '.3em'
+    marginBottom: '.3em',
+    backgroundColor: '#e05880',
+    border: 'none'
   }
 };
 
-type LoginValues = {
-  email: string;
-  password: string;
-};
-
 const SignupForm = () => {
+  const auth = useAuth();
+  const history = useHistory();
   const [form] = Form.useForm();
-
+  const [openSendEmailBtn, setOpenSendEmailBtn] = useState(true);
   const [openEmailAuth, setOpenEmailAuth] = useState(false);
 
-  const onFinish = (values: LoginValues) => {
+  const signup = (values: SignupValues) => {
+    auth
+      .signup(values)
+      .then(() => history.push('/'))
+      .catch((err) => msg('Error', err.message));
     console.log(values);
   };
 
   const sendAuthCode = () => {
     if (form.getFieldError('email').length > 0) {
+      msg('Error', '이메일을 입력해주세요.');
       return;
     }
-    setOpenEmailAuth(true);
+    auth
+      .sendAuthCode(form.getFieldValue('email'))
+      .then(() => {
+        setOpenEmailAuth(true);
+        setOpenSendEmailBtn(false);
+      })
+      .catch((err) => msg('Error', err.message));
   };
 
-  const checkAuthCode = () => {
+  const confirmAuthCode = () => {
+    auth
+      .confirmAuthCode(form.getFieldValue('email'), form.getFieldValue('email-auth-code'))
+      .then(() => {
+        setOpenEmailAuth(false);
+      })
+      .catch((err) => msg('Error', err.message));
     // 이메일 인증 코드 비교
   };
 
   return (
-    <Form form={form} onFinish={onFinish}>
+    <Form form={form} onFinish={signup}>
       <Form.Item>
         <Space>
           <Form.Item
@@ -57,9 +77,11 @@ const SignupForm = () => {
                 validator: inputValidator.checkEmail
               }
             ]}>
-            <Input placeholder="이메일" />
+            <Input type="email" placeholder="이메일" disabled={!openSendEmailBtn} />
           </Form.Item>
-          <Button onClick={sendAuthCode}>인증</Button>
+          <Button onClick={sendAuthCode} disabled={!openSendEmailBtn}>
+            인증
+          </Button>
         </Space>
       </Form.Item>
 
@@ -76,8 +98,8 @@ const SignupForm = () => {
             ]}>
             <Input placeholder="인증 번호" disabled={!openEmailAuth} />
           </Form.Item>
-          <Button onClick={checkAuthCode} disabled={!openEmailAuth}>
-            확인
+          <Button onClick={confirmAuthCode} disabled={!openEmailAuth}>
+            {openEmailAuth ? '완료' : '확인'}
           </Button>
         </Space>
       </Form.Item>
