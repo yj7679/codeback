@@ -8,12 +8,12 @@ export { default as LogoTitle } from './atoms/text/logo-title';
 export { default as DataInput } from './atoms/data-input/data-input';
 export { default as DataOutput } from './atoms/data-output/data-output';
 export { default as AvatarBtn } from './atoms/btn/avatar-btn/avatar-btn';
-
 export { default as PageLoading } from './atoms/loading/page-loading';
 
 /* molecules */
 export { default as MainHeader } from './molecules/header/main-header/main-header';
 export { default as StudyHeader } from './molecules/header/study-header/study-header';
+export { default as LogoHeader } from './molecules/header/logo-header/logo-header';
 export { default as LoginModal } from './molecules/modal/login-modal';
 export { default as SignupForm } from './molecules/form/signup-form';
 export { default as LoginForm } from './molecules/form/login-form/login-form';
