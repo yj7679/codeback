@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5em;
+}
+
+.title {
+  text-align: center;
+  padding-top: 2em;
+  font-size: 2rem;
+  font-family: titleFont;
+  color: #e05880;
+}
