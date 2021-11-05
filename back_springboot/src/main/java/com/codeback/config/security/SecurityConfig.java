@@ -93,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/auth/**").permitAll()
 				.antMatchers("/auth/duplicate/nickname/**").permitAll()
 				.antMatchers("/auth/duplicate/email/**").permitAll()
+				.antMatchers("/auth/email/confirm").permitAll()
 
 				// .anyRequest().authenticated() -> 나머지 요청들은 모두 인증되어야 한다는 뜻
 				.anyRequest().authenticated()
