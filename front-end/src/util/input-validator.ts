@@ -1,19 +1,20 @@
+import { auth } from 'stores/auth';
+import { Auth } from 'stores/auth/store/auth';
 import {
   MANDATORY_EMAIL,
   INVALID_EMAIL_FORMAT,
   DUPLICATED_EMAIL,
   MANDATORY_NICKNAME,
-  NICKNAME_LENGTH_FORMAT,
-  NICKNAME_CANT_USE_SPECIAL_CHAR,
   DUPLICATED_NICKNAME,
   INVALID_PASSWORD_FORMAT,
-  MANDATORY_PASSWORD
+  MANDATORY_PASSWORD,
+  INVALID_NICKNAME_FORMAT
 } from './../common/string-template';
 
 export interface InputValidator {
   checkEmail: (_: any, email: string) => Promise<void>;
-  checkNickname: (_: any, email: string) => Promise<void>;
-  checkPassword: (_: any, email: string) => Promise<void>;
+  checkNickname: (_: any, nickname: string) => Promise<void>;
+  checkPassword: (_: any, password: string) => Promise<void>;
 }
 
 class InputValidatorImpl implements InputValidator {
@@ -23,41 +24,55 @@ class InputValidatorImpl implements InputValidator {
 
   private readonly passwordRegExp: RegExp;
 
-  constructor() {
-    this.emailRegExp = /[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/i;
-    this.nicknameRegExp = /^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣])/;
+  constructor(private readonly authStore: Auth) {
+    this.emailRegExp =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    this.nicknameRegExp = /[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}/;
     this.passwordRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
   }
 
-  checkEmail = (_: any, email: string) => {
-    if (!email) {
+  checkEmail = async (_: any, email: string) => {
+    if (email.length === 0) {
       return Promise.reject(new Error(MANDATORY_EMAIL));
     }
+
     if (!email.match(this.emailRegExp)) {
       return Promise.reject(new Error(INVALID_EMAIL_FORMAT));
     }
-    // 이메일 중복 확인 API가 들어가야 함
-    if (email === '123@naver.com') {
+
+    try {
+      await this.authStore.checkEmailDuplicated(email);
+      return await Promise.resolve();
+    } catch {
       return Promise.reject(new Error(DUPLICATED_EMAIL));
     }
-    return Promise.resolve();
   };
 
-  checkNickname = (_: any, nickname: string) => {
+  checkEmailLoginForm = async (_: any, email: string) => {
+    if (email.length === 0) {
+      return Promise.reject(new Error(MANDATORY_EMAIL));
+    }
+
+    if (!email.match(this.emailRegExp)) {
+      return Promise.reject(new Error(INVALID_EMAIL_FORMAT));
+    }
+  };
+
+  checkNickname = async (_: any, nickname: string) => {
     if (!nickname) {
       return Promise.reject(new Error(MANDATORY_NICKNAME));
     }
-    if (nickname.length < 2 || nickname.length > 10) {
-      return Promise.reject(new Error(NICKNAME_LENGTH_FORMAT));
-    }
+
     if (!nickname.match(this.nicknameRegExp)) {
-      return Promise.reject(new Error(NICKNAME_CANT_USE_SPECIAL_CHAR));
+      return Promise.reject(new Error(INVALID_NICKNAME_FORMAT));
     }
-    // 닉네임 중복 로직 들어가야 함
-    if (nickname === 'asdf1234') {
+
+    try {
+      await this.authStore.checkNicknameDuplicated(nickname);
+      return await Promise.resolve();
+    } catch {
       return Promise.reject(new Error(DUPLICATED_NICKNAME));
     }
-    return Promise.resolve();
   };
 
   checkPassword = (_: any, password: string) => {
@@ -71,4 +86,4 @@ class InputValidatorImpl implements InputValidator {
   };
 }
 
-export default new InputValidatorImpl();
+export default new InputValidatorImpl(auth);

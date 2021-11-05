@@ -5,6 +5,15 @@ body {
   font-family: 'defaultFont';
 }
 
+/* antd button click animation disabled */
+[ant-click-animating-without-extra-node]:after {
+  -webkit-animation: none !important;
+  -moz-animation: none !important;
+  -o-animation: none !important;
+  -ms-animation: none !important;
+  animation: none !important;
+}
+
 /* remote */
 .remote-caret {
   position: absolute;
@@ -28,4 +37,36 @@ body {
   padding-right: 2px;
   z-index: 3;
   border-radius: 20%;
+}
+
+/* react-reflex */
+
+.reflex-container.vertical > .reflex-splitter {
+  width: 10px !important;
+}
+
+.horizontal > .reflex-splitter {
+  height: 10px !important;
+}
+
+/* editor height 100% */
+.CodeMirror {
+  height: 100% !important;
+}
+
+/* scroll bar */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #b24592;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-track {
+  background-color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 5px white;
 }

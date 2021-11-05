@@ -1,0 +1,9 @@
+@import 'assets/css/color.css';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em;
+  border-bottom: 0.3px solid var(--main-color);
+}

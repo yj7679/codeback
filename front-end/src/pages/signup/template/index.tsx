@@ -1,19 +1,17 @@
 import React, { ReactNode } from 'react';
-import { CssKeyObject } from 'types/common';
-
-const styles: CssKeyObject = {
-  container: {
-    height: '90vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-};
+import styles from './index.module.css';
 
 type Props = {
+  header: ReactNode;
   signupForm: ReactNode;
 };
 
-const SignupTemplate = ({ signupForm }: Props) => <div style={styles.container}>{signupForm}</div>;
+const SignupTemplate = ({ header, signupForm }: Props) => (
+  <div>
+    <div>{header}</div>
+    <h1 className={styles.title}>회원 가입</h1>
+    <div className={styles.container}>{signupForm}</div>
+  </div>
+);
 
 export default SignupTemplate;
