@@ -110,15 +110,16 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호찾기", notes = "토큰이랑 이메일,비밀번호 받아서 비밀번호만 업데이트")
     @PutMapping("/passwordUpdate")
-    public ResponseEntity<?> passwordUpdate(HttpServletRequest request, PasswordUpdateRequestDto passwordUpdateRequestDto) {
+    public ResponseEntity<?> passwordUpdate(HttpServletRequest request,@RequestBody PasswordUpdateRequestDto passwordUpdateRequestDto) {
         try {
-
+            System.out.println("2312312312312");
             String email = passwordUpdateRequestDto.getEmail();
             Optional<User> user = userService.findUserByEmail(email);
             Cookie[] cookies = request.getCookies();
             // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
             // 이메일이 db에없는 거면 잘못된 접근
             if(cookies == null || !user.isPresent()){
+                System.out.println("UNAUTHORIZED");
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
             for (Cookie cookie : cookies) {

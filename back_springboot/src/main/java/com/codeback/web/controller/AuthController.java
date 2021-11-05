@@ -274,7 +274,7 @@ public class AuthController {
         // Redis에 저장된 중복검사된 이메일과 같은 경우
         if(storedCode.equals(code)){
             ResponseEntity<?> res = userService.addEmailCookie();
-            return new ResponseEntity<>(res, HttpStatus.OK);
+            return res;
         }
         else{ // 다른 경우
             return new ResponseEntity<String>("false",HttpStatus.OK);

@@ -76,7 +76,7 @@ public class UserService  {
             userRepository.delete(selectUser);
         });
     }
-
+    @Transactional
     public void updatePassword(PasswordUpdateRequestDto passwordUpdateRequestDto) {
         Optional<User> user = findUserByEmail(passwordUpdateRequestDto.getEmail());
 
