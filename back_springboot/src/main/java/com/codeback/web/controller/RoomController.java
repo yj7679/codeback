@@ -32,15 +32,15 @@ public class RoomController {
     // res: 해시된 방 이름
     //jwt로 바꿔야함. jwt없이 user id로만 방만들기 기능
     @ApiOperation(value = "방 만들기", notes = "방 생성.")
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> makeRoom(@CookieValue(name = "accessToken", required = false) String accessToken){
         try{
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
             Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
 
-            roomService.makeRoom(claims.get("sub").toString());
-            return new ResponseEntity<>(HttpStatus.OK);
+            String roomId = roomService.makeRoom(claims.get("sub").toString());
+            return new ResponseEntity<String>(roomId,HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -49,7 +49,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "방 삭제", notes = "방 삭제.")
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<?> deleteRoom(@CookieValue(name = "accessToken", required = false) String accessToken){
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
