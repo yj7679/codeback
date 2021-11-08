@@ -29,6 +29,7 @@ export class AuthImpl implements Auth {
       await authRepository.login(value);
       runInAction(() => {
         this.authenticated = true;
+        localStorage.setItem('user', 'user');
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -44,6 +45,7 @@ export class AuthImpl implements Auth {
       await authRepository.logout();
       runInAction(() => {
         this.authenticated = false;
+        localStorage.removeItem('user');
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
