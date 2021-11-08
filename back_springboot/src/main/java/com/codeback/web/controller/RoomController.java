@@ -1,8 +1,10 @@
 package com.codeback.web.controller;
 
+import com.codeback.domain.room.Room;
 import com.codeback.service.room.RoomService;
 import com.codeback.util.SecurityCipher;
 import com.codeback.web.dto.RoomSaveRequestDto;
+import com.codeback.web.dto.RoomVerifyDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Api(tags = {"Room"})
 @RequiredArgsConstructor
@@ -60,6 +64,31 @@ public class RoomController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @ApiOperation(value = "방 유효성 검사", notes = "방 입장 유효한 url 체크")
+    @PostMapping("/verification")
+    public ResponseEntity<?> verifyRoom(@RequestBody RoomVerifyDto requestDto){
+        try {
+            String hash = requestDto.getHash();
+
+            Optional<Room> roomOptional = roomService.verifyRoom(hash);
+            if(roomOptional.isPresent()){
+
+                // 방이 있으면 OK
+                return new ResponseEntity<>(HttpStatus.OK);
+
+            }
+            else{
+                // 없는 방에 접근 404
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        catch (Exception e){
+            // HASH로 요청안하고 잘못된 요청 일때 400
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
