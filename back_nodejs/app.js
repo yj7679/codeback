@@ -1,7 +1,9 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
+const https = require('https');
 
 dotenv.config({
   path: path.join(__dirname, '.env')
@@ -19,8 +21,19 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const server = app.listen(app.get('port'), () => {
-  console.log(app.get('port'), ' 번 포트에서 대기 중');
-});
+try{
+  const option = {
+    ca : fs.readFileSync('./'+process.env.SECRET_PATH+'/fullchain.pem'),
+    key : fs.readFileSync('./'+process.env.SECRET_PATH+'/privkey.pem'),
+    cert : fs.readFileSync('./'+process.env.SECRET_PATH+'cert.pem')
+  };
 
-socketio(server, app);
+  const server = https.createServer(option, app).listen(app.get('port'), () => {
+    console.log(app.get('port'), ' 번 포트에서 대기 중');
+  });
+
+  socketio(server, app)
+}catch(err){
+  console.log('catch err');
+  console.log(err);
+}
