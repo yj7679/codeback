@@ -25,7 +25,7 @@ try{
   const option = {
     ca : fs.readFileSync(process.env.SECRET_PATH+'/fullchain.pem'),
     key : fs.readFileSync(process.env.SECRET_PATH+'/privkey.pem'),
-    cert : fs.readFileSync(process.env.SECRET_PATH+'cert.pem')
+    cert : fs.readFileSync(process.env.SECRET_PATH+'/cert.pem')
   };
 
   const server = https.createServer(option, app).listen(app.get('port'), () => {
