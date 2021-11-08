@@ -23,9 +23,9 @@ app.use(express.urlencoded({ extended: false }));
 
 try{
   const option = {
-    ca : fs.readFileSync(process.env.SECRET_PATH+'/fullchain.pem'),
-    key : fs.readFileSync(process.env.SECRET_PATH+'/privkey.pem'),
-    cert : fs.readFileSync(process.env.SECRET_PATH+'/cert.pem')
+    ca : fs.readFileSync(process.env.SECRET_PATH+'/fullchain1.pem'),
+    key : fs.readFileSync(process.env.SECRET_PATH+'/privkey1.pem'),
+    cert : fs.readFileSync(process.env.SECRET_PATH+'/cert1.pem')
   };
 
   const server = https.createServer(option, app).listen(app.get('port'), () => {
