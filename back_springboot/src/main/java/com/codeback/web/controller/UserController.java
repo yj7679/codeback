@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원정보 수정", notes = "이메일은 바꾸고자하는사람 | 닉네임,비밀번호는 바꾸고싶은거 입력")
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         try {
             userService.save(userUpdateRequestDto);
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원탈퇴", notes = "토큰을 받아서 회원탈퇴 진행")
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<?> deleteUser(@CookieValue(name = "accessToken", required = false) String accessToken) {
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
