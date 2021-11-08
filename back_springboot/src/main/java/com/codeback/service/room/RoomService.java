@@ -27,11 +27,14 @@ public class RoomService {
         Optional<User> user = userRepository.findByEmail(email);
         User userEntity = user.get();
         long time = System.currentTimeMillis();
+        String tempEmail[] = email.split("@");
 
         // 초단위까지해서 유일 값 만들기
         String t = Long.toString(time);
+        String sub_t = t.substring(t.length()-4, t.length());
 
-        String roomId = email + t;
+        String roomId = tempEmail[0] + sub_t;
+
         // room table에 추가
         Room room = Room.builder()
                 .user(userEntity)
@@ -51,5 +54,10 @@ public class RoomService {
         roomRepository.deleteByUserUserNumber(user.getUserNumber());
 
 
+    }
+
+    public Optional<Room> verifyRoom(String roomId) {
+        Optional<Room> room = roomRepository.findByRoomId(roomId);
+        return room;
     }
 }
