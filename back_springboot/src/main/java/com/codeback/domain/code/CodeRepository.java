@@ -1,0 +1,15 @@
+package com.codeback.domain.code;
+
+
+import com.codeback.web.dto.CodeSearchResponseDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface CodeRepository extends JpaRepository<Code, Long> {
+
+
+    List<Code> findAllByUserUserNumber(long userNumber);
+
+    Code findByCodeNumber(Long codeNumber);
+}
