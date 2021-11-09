@@ -48,13 +48,11 @@ module.exports = (server) => {
             const roomId = socket.roomId;
 
             let compile_result = null;
-            compile(data)
-                .then((result)=>{
-                    compile_result = result;
-                })
-                .catch((err)=>{
-                    compile_result = err;
-                })
+            try{
+                compile_result = await compile(data);
+            }catch(err){
+                compile_result = err;
+            }
 
             if(roomId) io.to(roomId).emit('compile', compile_result);
         });
