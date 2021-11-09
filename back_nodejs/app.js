@@ -28,7 +28,7 @@ try{
   };
 
   const server = https.createServer(option, app).listen(app.get('port'), () => {
-    console.log(app.get('port'), ' 번 포트에서 대기 중 webhook변경 & accept merge request 만 클릭함');
+    console.log(app.get('port'), ' 번 포트에서 대기 중');
   });
 
   socketio(server)
