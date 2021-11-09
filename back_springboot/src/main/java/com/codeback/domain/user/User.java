@@ -1,5 +1,6 @@
 package com.codeback.domain.user;
 
+import com.codeback.domain.code.Code;
 import com.codeback.domain.room.Room;
 import com.codeback.web.dto.UserSummary;
 import lombok.Builder;
