@@ -44,7 +44,7 @@ module.exports = (server) => {
         } )
 
         // compile code
-        socket.on('compile', (data) => {
+        socket.on('compile', async (data) => {
             const roomId = socket.roomId;
 
             let compile_result = null;
