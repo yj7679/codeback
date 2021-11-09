@@ -26,3 +26,7 @@ export const SUCCESS_TO_LOGOUT = '로그아웃에 성공했습니다.';
 
 /* server */
 export const INTERNAL_SERVER_ERROR = '서버에 문제가 발생했습니다.';
+
+/* about study room*/
+export const FAIL_TO_CREATE_STUDY = '방만들기에 실패하셨습니다.';
+export const FAIL_TO_LEAVE_STUDY = '세션 종료에 실패하셨습니다.';
