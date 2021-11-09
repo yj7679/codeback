@@ -1,19 +1,39 @@
 import React, { ReactNode } from 'react';
-import { CssKeyObject } from 'types/common';
-
-const styles: CssKeyObject = {
-  container: {}
-};
+import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
+import 'react-reflex/styles.css';
+import styles from './index.module.css';
 
 type Props = {
   studyHeader: ReactNode;
   editor: ReactNode;
+  dataInput: ReactNode;
+  dataOutput: ReactNode;
 };
 
-const StudyTemplate = ({ studyHeader, editor }: Props) => (
-  <div style={styles.container}>
-    <div>{studyHeader}</div>
-    <div>{editor}</div>
+const StudyTemplate = ({ studyHeader, editor, dataInput, dataOutput }: Props) => (
+  <div className={styles.container}>
+    <div className={styles.headerContainer}>{studyHeader}</div>
+    <div className={styles.contents}>
+      <ReflexContainer orientation="vertical">
+        <ReflexElement>
+          <ReflexContainer orientation="horizontal">
+            <ReflexElement flex={0.7}>{editor}</ReflexElement>
+            <ReflexSplitter />
+            <ReflexElement className="bottom-pane">
+              <ReflexContainer orientation="vertical">
+                <ReflexElement flex={0.5}>{dataInput}</ReflexElement>
+                <ReflexSplitter />
+                <ReflexElement>{dataOutput}</ReflexElement>
+              </ReflexContainer>
+            </ReflexElement>
+          </ReflexContainer>
+        </ReflexElement>
+        <ReflexSplitter />
+        <ReflexElement className="right-pane" maxSize={330}>
+          <div>hey</div>
+        </ReflexElement>
+      </ReflexContainer>
+    </div>
   </div>
 );
 
