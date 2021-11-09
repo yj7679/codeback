@@ -1,5 +1,4 @@
 const socketio = require('socket.io');
-const request = require('request');
 const compile = require('./compile');
 
 module.exports = (server) => {
