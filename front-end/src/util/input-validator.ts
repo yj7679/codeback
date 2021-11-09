@@ -75,6 +75,17 @@ class InputValidatorImpl implements InputValidator {
     }
   };
 
+  checkNicknameForm = async (_: any, nickname: string) => {
+    if (!nickname) {
+      return Promise.reject(new Error(MANDATORY_NICKNAME));
+    }
+
+    if (!nickname.match(this.nicknameRegExp)) {
+      return Promise.reject(new Error(INVALID_NICKNAME_FORMAT));
+    }
+    return Promise.resolve();
+  };
+
   checkPassword = (_: any, password: string) => {
     if (!password) {
       return Promise.reject(new Error(MANDATORY_PASSWORD));
