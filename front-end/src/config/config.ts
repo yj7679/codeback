@@ -7,5 +7,7 @@ function required(key: string, defaultValue: any = undefined) {
 }
 
 export const config = {
-  api: required('REACT_APP_API_DOMAIN_URL')
+  api: required('REACT_APP_API_DOMAIN_URL'),
+  openviduApi: required('REACT_APP_OPENVIDU_URL'),
+  openviduKey: required('REACT_APP_OPENVIDU_KEY')
 };
