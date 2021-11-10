@@ -38,14 +38,18 @@ const SignupForm = () => {
       .signup(values)
       .then(() => history.push('/'))
       .catch((err) => msg('Error', err.message));
-    console.log(values);
   };
 
   const sendAuthCode = () => {
-    if (form.getFieldError('email').length > 0) {
+    if (form.getFieldValue('email') == null) {
       msg('Error', '이메일을 입력해주세요.');
       return;
     }
+
+    if (form.getFieldError('email').length > 0) {
+      return;
+    }
+
     auth
       .sendAuthCode(form.getFieldValue('email'))
       .then(() => {
@@ -62,7 +66,6 @@ const SignupForm = () => {
         setOpenEmailAuth(false);
       })
       .catch((err) => msg('Error', err.message));
-    // 이메일 인증 코드 비교
   };
 
   return (
