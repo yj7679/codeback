@@ -19,6 +19,7 @@ export const COMPLETE_STUDY_URL_COPY = '방 주소 복사 완료';
 /* login */
 export const FAIL_TO_LOGIN = '로그인에 실패하셨습니다.';
 export const SUCCESS_TO_LOGIN = '로그인에 성공했습니다.';
+export const FAIL_TO_GET_USEINFO = '회원정보를 가져오는데 실패했습니다.';
 
 /* logout */
 export const FAIL_TO_LOGOUT = '로그아웃에 실패하셨습니다.';
@@ -30,3 +31,4 @@ export const INTERNAL_SERVER_ERROR = '서버에 문제가 발생했습니다.';
 /* about study room*/
 export const FAIL_TO_CREATE_STUDY = '방만들기에 실패하셨습니다.';
 export const FAIL_TO_LEAVE_STUDY = '세션 종료에 실패하셨습니다.';
+export const NOT_EXIST_STUDY = '존재하지 않는 스터디입니다.';

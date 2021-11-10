@@ -1,12 +1,13 @@
 import axios, { AxiosError } from 'axios';
 import { makeAutoObservable } from 'mobx';
-import { FAIL_TO_CREATE_STUDY, FAIL_TO_LEAVE_STUDY } from 'common/string-template';
+import { FAIL_TO_CREATE_STUDY, FAIL_TO_LEAVE_STUDY, NOT_EXIST_STUDY } from 'common/string-template';
 import { handleServerError } from 'util/http-error';
 import studyRepository from '../repository/study-repository';
 
 export interface Study {
   studyId: string | undefined;
   getStudyId: () => Promise<string | undefined>;
+  verifyStudy: (d: string) => Promise<void>;
 }
 
 export class StudyImpl implements Study {
@@ -39,6 +40,19 @@ export class StudyImpl implements Study {
         console.log(axiosError.response);
         handleServerError(axiosError);
         throw new Error(FAIL_TO_LEAVE_STUDY);
+      }
+    }
+  }
+
+  async verifyStudy(id: string) {
+    try {
+      await studyRepository.verifyStudy(id);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        console.log(axiosError.response);
+        handleServerError(axiosError);
+        throw new Error(NOT_EXIST_STUDY);
       }
     }
   }

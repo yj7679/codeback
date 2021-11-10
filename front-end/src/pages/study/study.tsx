@@ -4,18 +4,40 @@ import StudyTemplate from './template';
 import { DataInput, DataOutput, Editor, NicknameForm, OpenViduMain, StudyHeader } from 'components';
 import { getRandomColor } from 'util/random-color';
 import useStudy from 'hooks/useStudy';
+import { msg } from 'util/message';
+import useAuth from 'hooks/useAuth';
+import { observer } from 'mobx-react-lite';
 
-const Study = () => {
+const Study = observer(() => {
+  const { info } = useAuth();
   const study = useStudy();
   const { id }: { id: string } = useParams();
+  const [nickname, setNickname] = useState<string | undefined>(undefined);
+  const [isExistStudy, setIsExistStudy] = useState(false);
 
   useEffect(() => {
+    study
+      .verifyStudy(id)
+      .then(() => setIsExistStudy(true))
+      .catch((err) => {
+        history.go(-1);
+        msg('Error', err.message);
+      });
+
     return () => {
       study.leaveStudy();
     };
-  }, [study]);
+  }, [study, id]);
 
-  const [nickname, setNickname] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (info != null) {
+      setNickname(info.nickname);
+    }
+  }, [info]);
+
+  if (!isExistStudy) {
+    return <div style={{ margin: 'auto' }}>존재하지 않는 스터디입니다.</div>;
+  }
 
   return (
     <>
@@ -34,6 +56,6 @@ const Study = () => {
       )}
     </>
   );
-};
+});
 
 export default Study;

@@ -1,12 +1,18 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import axios, { AxiosError } from 'axios';
 import authRepository from '../repository/auth-repository';
-import { LoginValues, SignupValues } from '../model/auth-model';
+import { LoginValues, SignupValues, UserInfo } from '../model/auth-model';
 import { handleServerError } from 'util/http-error';
-import { FAIL_TO_LOGIN, FAIL_TO_LOGOUT, FAIL_TO_SIGNUP } from 'common/string-template';
+import {
+  FAIL_TO_GET_USEINFO,
+  FAIL_TO_LOGIN,
+  FAIL_TO_LOGOUT,
+  FAIL_TO_SIGNUP
+} from 'common/string-template';
 
 export interface Auth {
   authenticated: boolean;
+  info: UserInfo | undefined;
   login: (value: LoginValues) => Promise<void>;
   logout: () => Promise<void>;
   getSignupStartCookie: () => Promise<void>;
@@ -20,13 +26,33 @@ export interface Auth {
 export class AuthImpl implements Auth {
   authenticated = false;
 
+  info: UserInfo | undefined = undefined;
+
   constructor() {
     makeAutoObservable(this);
+  }
+
+  async getUserInfo() {
+    try {
+      const res = await authRepository.getUserInfo();
+      console.log(res);
+      runInAction(() => {
+        this.info = { ...res.data };
+        console.log('this info', this.info);
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        handleServerError(axiosError);
+        throw new Error(FAIL_TO_GET_USEINFO);
+      }
+    }
   }
 
   async login(value: LoginValues) {
     try {
       await authRepository.login(value);
+      this.getUserInfo();
       runInAction(() => {
         this.authenticated = true;
         localStorage.setItem('user', 'user');
