@@ -21,3 +21,6 @@ export { default as SignupForm } from './molecules/form/signup-form';
 export { default as LoginForm } from './molecules/form/login-form/login-form';
 export { default as NicknameForm } from './molecules/form/nickname-form/nickname-form';
 export { default as EditorMenu } from './molecules/menu/editor-menu';
+
+/* organisms */
+export { default as OpenViduMain } from './organisms/openvidu/openvidu-main.jsx';

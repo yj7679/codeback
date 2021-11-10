@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import StudyTemplate from './template';
-import { DataInput, DataOutput, Editor, NicknameForm, StudyHeader } from 'components';
+import { DataInput, DataOutput, Editor, NicknameForm, OpenViduMain, StudyHeader } from 'components';
 import { getRandomColor } from 'util/random-color';
 import useStudy from 'hooks/useStudy';
 
@@ -25,6 +25,7 @@ const Study = () => {
           editor={<Editor cellId={id} userName={nickname} cursorColor={getRandomColor()} />}
           dataInput={<DataInput />}
           dataOutput={<DataOutput />}
+          videoRoom={<OpenViduMain roomTitle="1234" pinNumber={id} nickname={nickname} />}
         />
       ) : (
         <div style={{ margin: 'auto' }}>

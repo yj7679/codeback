@@ -8,9 +8,10 @@ type Props = {
   editor: ReactNode;
   dataInput: ReactNode;
   dataOutput: ReactNode;
+  videoRoom: ReactNode;
 };
 
-const StudyTemplate = ({ studyHeader, editor, dataInput, dataOutput }: Props) => (
+const StudyTemplate = ({ studyHeader, editor, dataInput, dataOutput, videoRoom }: Props) => (
   <div className={styles.container}>
     <div className={styles.headerContainer}>{studyHeader}</div>
     <div className={styles.contents}>
@@ -30,7 +31,7 @@ const StudyTemplate = ({ studyHeader, editor, dataInput, dataOutput }: Props) =>
         </ReflexElement>
         <ReflexSplitter />
         <ReflexElement className="right-pane" maxSize={330}>
-          <div>hey</div>
+          {videoRoom}
         </ReflexElement>
       </ReflexContainer>
     </div>
