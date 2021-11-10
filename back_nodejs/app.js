@@ -15,16 +15,9 @@ const app = express();
 const socketio = require('./utils/socket');
 
 //cors
-const whitelist = ["https://codeback.net:443", "https://localhost:3000"];
 const corsOptions = {
-  origin: function(origin, callback){
-    if(whitelist.indexOf(origin) !== -1){
-      callback(null, true);
-    }
-    else{
-      callback(new Error("not allowed origin"));
-    }
-  }
+  origin:'https://localhost:3000',
+  credientials: true
 }
 
 app.set('port', process.env.PORT || 8081);
