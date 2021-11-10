@@ -9,3 +9,8 @@ export type SignupValues = {
   password: string;
   confirmPassword: string;
 };
+
+export type UserInfo = {
+  email: string;
+  nickname: string;
+};

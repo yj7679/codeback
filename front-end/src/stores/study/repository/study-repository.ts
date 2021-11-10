@@ -12,6 +12,12 @@ class StudyRepository {
   async leaveStudy() {
     return this.instance.delete(`${config.api}/room`);
   }
+
+  async verifyStudy(id: string) {
+    return this.instance.post(`${config.api}/room/verification`, {
+      hash: id
+    });
+  }
 }
 
 export default new StudyRepository(mainAxios);

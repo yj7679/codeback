@@ -6,6 +6,10 @@ import { LoginValues, SignupValues } from '../model/auth-model';
 class AuthRepository {
   constructor(private readonly instance: AxiosInstance) {}
 
+  async getUserInfo() {
+    return this.instance.get(`${config.api}/user`);
+  }
+
   async login(value: LoginValues) {
     return this.instance.post(`${config.api}/auth/login`, value);
   }
