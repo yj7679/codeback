@@ -195,10 +195,10 @@ public class AuthController {
 
         // Redis에 저장된 중복검사된 이메일과 같은 경우
         if(storedCode.equals(code)){
-            return new ResponseEntity<String>("true",HttpStatus.OK);
+            return new ResponseEntity<String>("true", HttpStatus.OK);
         }
         else{ // 다른 경우
-            return new ResponseEntity<String>("false",HttpStatus.OK);
+            return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
 
         }
     }
