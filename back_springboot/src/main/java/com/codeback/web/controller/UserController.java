@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원정보조회", notes = "토큰을 받아서 이메일,닉네임 반환")
-    @GetMapping("/my")
+    @GetMapping("")
     public ResponseEntity<?> searchUser(@CookieValue(name = "accessToken", required = false) String accessToken) {
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
