@@ -4,6 +4,7 @@ const fs = require('fs');
 const https = require('https');
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 // read .env
 dotenv.config({
@@ -13,8 +14,22 @@ dotenv.config({
 const app = express();
 const socketio = require('./utils/socket');
 
+//cors
+const whitelist = ["https://codeback.net:443", "https://localhost:3000"];
+const corsOptions = {
+  origin: function(origin, callback){
+    if(whitelist.indexOf(origin) !== -1){
+      callback(null, true);
+    }
+    else{
+      callback(new Error("not allowed origin"));
+    }
+  }
+}
+
 app.set('port', process.env.PORT || 8081);
 
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
