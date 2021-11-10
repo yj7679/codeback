@@ -1,18 +1,28 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button } from 'antd';
 import { msg } from 'util/message';
 import { REQUIRE_LOGIN } from 'common/string-template';
 import styles from './create-study-btn.module.css';
+import useStudy from 'hooks/useStudy';
+
+import useAuth from 'hooks/useAuth';
 
 const CreateStudyBtn = () => {
+  const auth = useAuth();
+  const study = useStudy();
+  const history = useHistory();
+
   const createStudy = () => {
-    const authenticated = false;
-    if (authenticated) {
+    if (!auth.authenticated) {
       msg('Error', REQUIRE_LOGIN);
       return;
     }
 
-    msg('Success', '방 만들기 성공');
+    study
+      .getStudyId()
+      .then((studyId) => history.push(`/study/${studyId}`))
+      .catch((err) => msg('Error', err.message));
   };
 
   return (
