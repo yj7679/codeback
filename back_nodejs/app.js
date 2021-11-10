@@ -27,6 +27,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.get('/corstest', (req, res)=>{
+  res.send('cors test');
+})
+
 // read .pem files for https
 try{
   const option = {

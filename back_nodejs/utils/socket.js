@@ -2,7 +2,10 @@ const socketio = require('socket.io');
 const compile = require('./compile');
 
 module.exports = (server) => {
-    const io = socketio(server, { path: '/socket.io' });
+    const io = socketio(server, { path: '/socket.io', cors:{
+        origin: "https://localhost:3000",
+        credentials: true
+    } });
 
     // connection event
     io.on('connection', (socket) => {
