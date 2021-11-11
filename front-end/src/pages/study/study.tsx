@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { useParams } from 'react-router-dom';
 import StudyTemplate from './template';
 import { DataInput, DataOutput, Editor, NicknameForm, OpenViduMain, StudyHeader } from 'components';
-import { getRandomColor } from 'util/random-color';
 import useStudy from 'hooks/useStudy';
-import { msg } from 'util/message';
 import useAuth from 'hooks/useAuth';
-import { observer } from 'mobx-react-lite';
+import { getRandomColor } from 'util/random-color';
+import { msg } from 'util/message';
+import SocketClient from 'config/socket';
 
 const Study = observer(() => {
   const { info } = useAuth();
@@ -26,6 +27,7 @@ const Study = observer(() => {
 
     return () => {
       study.leaveStudy();
+      SocketClient.close();
     };
   }, [study, id]);
 
@@ -34,6 +36,14 @@ const Study = observer(() => {
       setNickname(info.nickname);
     }
   }, [info]);
+
+  useEffect(() => {
+    try {
+      SocketClient.connect(id);
+    } catch (err) {
+      msg('Error', '소켓 연결 실패');
+    }
+  }, [id]);
 
   if (!isExistStudy) {
     return <div style={{ margin: 'auto' }}>존재하지 않는 스터디입니다.</div>;
