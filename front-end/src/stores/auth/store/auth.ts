@@ -4,6 +4,7 @@ import authRepository from '../repository/auth-repository';
 import { LoginValues, SignupValues, UserInfo } from '../model/auth-model';
 import { handleServerError } from 'util/http-error';
 import {
+  FAIL_TO_CONFIRM_AUTHCODE,
   FAIL_TO_GET_USEINFO,
   FAIL_TO_LOGIN,
   FAIL_TO_LOGOUT,
@@ -137,7 +138,7 @@ export class AuthImpl implements Auth {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         handleServerError(axiosError);
-        throw new Error(FAIL_TO_SIGNUP);
+        throw new Error(FAIL_TO_CONFIRM_AUTHCODE);
       }
     }
   }
