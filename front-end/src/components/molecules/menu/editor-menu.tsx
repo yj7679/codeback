@@ -4,7 +4,7 @@ import { Select } from 'antd';
 import useEditor from 'hooks/useEditor';
 import { OptionType } from 'stores/editor/model/editor-model';
 import { CssKeyObject } from 'types/common';
-import { UrlCopyBtn } from 'components';
+import { CompileBtn, UrlCopyBtn } from 'components';
 
 const { Option } = Select;
 
@@ -40,6 +40,7 @@ const EditorMenu = observer(() => {
 
   return (
     <div style={styles.container}>
+      <CompileBtn style={styles.option} />
       <UrlCopyBtn style={styles.option} />
       <Select
         labelInValue
