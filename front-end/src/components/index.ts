@@ -11,6 +11,7 @@ export { default as AvatarBtn } from './atoms/btn/avatar-btn/avatar-btn';
 
 /* loading */
 export { default as PageLoading } from './atoms/loading/page-loading/page-loading';
+export { default as BoxLoading } from './atoms/loading/box-loading/box-loading';
 
 /* molecules */
 export { default as MainHeader } from './molecules/header/main-header/main-header';
