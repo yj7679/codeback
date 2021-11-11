@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
+import { observer } from 'mobx-react-lite';
 import styles from './data-input.module.css';
+import useEditor from 'hooks/useEditor';
 
-const DataInput = () => {
+const DataInput = observer(() => {
+  const editor = useEditor();
+
+  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    editor.input = e.target.value;
+  };
+
   return (
     <div className={styles.container}>
-      <span style={{ position: 'absolute', margin: '1em 0 0 1em', color: '#cecece' }}>입력 값</span>
-      <textarea className={styles.textarea}></textarea>
+      <span className={styles.title}>입력 값</span>
+      <textarea className={styles.textarea} onChange={handleInput}></textarea>
     </div>
   );
-};
+});
 
 export default DataInput;
