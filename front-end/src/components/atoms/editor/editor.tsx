@@ -8,6 +8,7 @@ import { Editor as CodeMirrorEditor } from 'codemirror';
 import './editor-addon';
 import useEditor from 'hooks/useEditor';
 import { getBackgroundColor, setLanguageString, setThemeString } from './util';
+import { config } from 'config/config';
 
 type EditorProps = {
   cellId: string;
@@ -32,9 +33,9 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
     });
 
     let wsProvider: WebsocketProvider | null = null;
-
+    // 'wss://demos.yjs.dev'
     try {
-      wsProvider = new WebsocketProvider('wss://demos.yjs.dev', cellId, ydoc);
+      wsProvider = new WebsocketProvider(config.editorApi, cellId, ydoc);
       // Define a shared text type on the document
       const yText = ydoc.getText('codemirror');
 
