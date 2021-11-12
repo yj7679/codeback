@@ -49,11 +49,13 @@ const Study = observer(() => {
     const clear = () => {
       if (location.state && location.state.host) {
         study.leaveStudy().then(() => {
+          console.log(SocketClient, SocketClient.io);
           SocketClient.getSocket().emit('roomDeleted');
+          SocketClient.close();
         });
+      } else {
+        SocketClient.close();
       }
-
-      SocketClient.close();
     };
 
     window.addEventListener('beforeunload', clear);
