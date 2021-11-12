@@ -6,14 +6,14 @@ class SocketClient {
 
   constructor(private readonly baseURL: string) {}
 
-  connect(id: string) {
+  connect(id: string, nickname: string) {
     this.io = io(this.baseURL);
 
     this.io.on('connect_error', (error: Error) => {
       throw new Error(`socket error ${error.message}`);
     });
 
-    this.io.emit('join', { roomId: id }, (error: Error) => {
+    this.io.emit('join', { roomId: id, nickname }, (error: Error) => {
       console.log('join error', error.message);
     });
   }
