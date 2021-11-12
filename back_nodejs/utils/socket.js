@@ -47,7 +47,11 @@ module.exports = (server) => {
 
         // compile code
         socket.on('compile', async (data) => {
+            console.log('compile data : ', data);
+
             const roomId = socket.roomId;
+            // emit pending state
+            if(roomId) io.to(roomId).emit('compilePending', {'pending':'true'});
 
             let compile_result = null;
             try{
@@ -56,6 +60,7 @@ module.exports = (server) => {
                 compile_result = err;
             }
 
+            // emit compile result
             if(roomId) io.to(roomId).emit('compile', compile_result);
         });
     });
