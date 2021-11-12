@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Select } from 'antd';
 import useEditor from 'hooks/useEditor';
 import { OptionType } from 'stores/editor/model/editor-model';
 import { CssKeyObject } from 'types/common';
 import { CompileBtn, UrlCopyBtn } from 'components';
+import SocketClient from 'config/socket';
 
 const { Option } = Select;
 
@@ -26,7 +27,16 @@ const styles: CssKeyObject = {
 const EditorMenu = observer(() => {
   const editor = useEditor();
 
+  useEffect(() => {
+    SocketClient.io.on('language', (language: any) => {
+      editor.language = { ...language };
+    });
+  }, [editor]);
+
   const handleLanguageChange = (value: OptionType) => {
+    SocketClient.io.emit('language', {
+      language: value
+    });
     editor.language = value;
   };
 
@@ -53,7 +63,7 @@ const EditorMenu = observer(() => {
 
       <Select
         labelInValue
-        defaultValue={editor.language}
+        value={editor.language}
         style={{ ...styles.option, ...styles.language }}
         onChange={handleLanguageChange}>
         <Option value="JavaScript">JavaScript</Option>
