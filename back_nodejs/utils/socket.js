@@ -5,7 +5,9 @@ module.exports = (server) => {
     const io = socketio(server, { path: '/socket.io', cors:{
         origin: "https://localhost:3000",
         credentials: true
-    } });
+    }});
+
+    const roomlanguage = {};
 
     // connection event
     io.on('connection', (socket) => {
@@ -37,7 +39,8 @@ module.exports = (server) => {
 
                 console.log(socket.id,' join ',roomId);
                 io.to(roomId).emit('join',{
-                    'nickname' : nickname
+                    'nickname' : nickname,
+                    'language' : roomlanguage[roomId] ? roomlanguage[roomId] : 'JavaScript'
                 });
             }
             // if data has not roomId
@@ -50,7 +53,10 @@ module.exports = (server) => {
         socket.on('roomDeleted', ()=>{
             const roomId = socket.roomId;
             console.log('roomDeleted event!', roomId);
-            if(roomId) io.to(roomId).emit('roomDeleted');
+            if(roomId) {
+                if(roomlanguage[roomId]) delete roomlanguage[roomId];
+                io.to(roomId).emit('roomDeleted');
+            }
         })
 
         // change language
@@ -58,6 +64,7 @@ module.exports = (server) => {
             const roomId = socket.roomId;
             const {language} = data;
 
+            if(language && roomlanguage[roomId]) roomlanguage[roomId] = language;
             // if data has roomId and language
             if(roomId && language) io.to(roomId).emit('language', language);
         })
