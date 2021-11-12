@@ -13,6 +13,11 @@ module.exports = (data)=>{
         clientSecret : process.env.JDOODLE_SECRET
     };
 
+    if(compile_data.language === 'java'){
+        console.log('java version -> 3');
+        compile_data.versionIndex = "3";
+    }
+
     // send compile request to jdoodle
     const req = new Promise((resolve, reject)=>{
         request({
