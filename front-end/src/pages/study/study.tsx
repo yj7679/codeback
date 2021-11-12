@@ -45,12 +45,21 @@ const Study = observer(() => {
   }, [info]);
 
   useEffect(() => {
+    if (nickname == null) return;
     try {
-      SocketClient.connect(id);
+      SocketClient.connect(id, nickname);
+
+      SocketClient.io.on('join', ({ nickname: _nickname }: { nickname: string }) => {
+        msg('Success', `${_nickname}님이 입장하셨습니다.`);
+      });
+
+      SocketClient.io.on('leave', ({ nickname: _nickname }: { nickname: string }) => {
+        msg('Success', `${_nickname}님이 퇴장하셨습니다.`);
+      });
     } catch (err) {
       msg('Error', '소켓 연결 실패');
     }
-  }, [id]);
+  }, [id, nickname]);
 
   if (!isExistStudy) {
     return <div style={{ margin: 'auto' }}>존재하지 않는 스터디입니다.</div>;

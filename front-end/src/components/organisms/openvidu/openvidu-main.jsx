@@ -4,7 +4,7 @@ import { OpenVidu } from 'openvidu-browser';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-
+import SocketClient from 'config/socket';
 // 컴포넌트
 import UserVideo from './user-video';
 
@@ -98,7 +98,6 @@ export default class OpenViduMain extends Component {
       () => {
         var mySession = this.state.session;
         mySession.on('streamCreated', (event) => {
-          console.log('구독자 확인', subscribers);
           var subscriber = mySession.subscribe(event.stream, undefined);
           var subscribers = this.state.subscribers;
           subscribers.push(subscriber);
@@ -127,8 +126,12 @@ export default class OpenViduMain extends Component {
         });
 
         mySession.on('streamDestroyed', (event) => {
+          SocketClient.io.emit('leave', {
+            nickname: JSON.parse(event.stream.streamManager.stream.connection.data).clientData
+          });
           this.deleteSubscriber(event.stream.streamManager);
         });
+
         this.getToken().then((token) => {
           mySession
             .connect(token, { clientData: this.state.myUserName })
