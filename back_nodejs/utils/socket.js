@@ -49,6 +49,7 @@ module.exports = (server) => {
         // room deleted
         socket.on('roomDeleted', ()=>{
             const roomId = socket.roomId;
+            console.log('roomDeleted event!', roomId);
             if(roomId) io.to(roomId).emit('roomDeleted');
         })
 
