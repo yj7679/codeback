@@ -8,6 +8,7 @@ import useAuth from 'hooks/useAuth';
 import { getRandomColor } from 'util/random-color';
 import { msg } from 'util/message';
 import SocketClient from 'config/socket';
+import useEditor from 'hooks/useEditor';
 
 type LocationState = {
   host: boolean;
@@ -16,6 +17,7 @@ type LocationState = {
 const Study = observer(() => {
   const location = useLocation<LocationState>();
   const { info } = useAuth();
+  const editor = useEditor();
   const study = useStudy();
   const { id }: { id: string } = useParams();
   const [nickname, setNickname] = useState<string | undefined>(undefined);
@@ -25,9 +27,27 @@ const Study = observer(() => {
     if (nickname == null) return;
     SocketClient.join(id, nickname);
     try {
-      SocketClient.io.on('join', ({ nickname: _nickname }: { nickname: string }) => {
-        msg('Success', `${_nickname}님이 입장하셨습니다.`);
-      });
+      SocketClient.io.on(
+        'join',
+        ({ nickname: _nickname, language }: { nickname: string; language: string }) => {
+          switch (language) {
+            case 'JavaScript':
+              editor.language = { label: language, value: language };
+              break;
+            case 'cpp':
+              editor.language = { label: 'C++', value: 'C++' };
+              break;
+            case 'python3':
+              editor.language = { label: 'Python', value: 'Python' };
+              break;
+            case 'java':
+              editor.language = { label: 'Java', value: 'Java' };
+              break;
+          }
+
+          msg('Success', `${_nickname}님이 입장하셨습니다.`);
+        }
+      );
 
       SocketClient.io.on('leave', ({ nickname: _nickname }: { nickname: string }) => {
         msg('Success', `${_nickname}님이 퇴장하셨습니다.`);
@@ -35,7 +55,7 @@ const Study = observer(() => {
     } catch (err) {
       msg('Error', '소켓 연결 실패');
     }
-  }, [id, nickname]);
+  }, [id, nickname, editor]);
 
   useEffect(() => {
     study
