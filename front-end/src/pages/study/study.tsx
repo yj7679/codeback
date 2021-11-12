@@ -49,7 +49,7 @@ const Study = observer(() => {
     const clear = () => {
       if (location.state && location.state.host) {
         study.leaveStudy().then(() => {
-          SocketClient.io.emit('roomDeleted');
+          SocketClient.getSocket().emit('roomDeleted');
         });
       }
 
