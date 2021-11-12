@@ -4,18 +4,22 @@ import { config } from './config';
 class SocketClient {
   io: any;
 
-  constructor(private readonly baseURL: string) {}
-
-  connect(id: string, nickname: string) {
+  constructor(private readonly baseURL: string) {
     this.io = io(this.baseURL);
 
     this.io.on('connect_error', (error: Error) => {
       throw new Error(`socket error ${error.message}`);
     });
+  }
 
+  join(id: string, nickname: string) {
     this.io.emit('join', { roomId: id, nickname }, (error: Error) => {
       console.log('join error', error.message);
     });
+  }
+
+  getSocket() {
+    return this.io;
   }
 
   close() {
