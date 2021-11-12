@@ -91,7 +91,7 @@ public class UserController {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
             Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
-            userService.deleteUser(claims.get("userNumber").toString());
+            userService.deleteById(Long.parseLong(claims.get("userNumber").toString()));
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class UserController {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
             Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
-            Optional<User> user = userService.findUserByEmail(claims.get("sub").toString());
+            Optional<User> user = userService.findById(Long.parseLong(claims.get("userNumber").toString()));
 
             Map<String, Object> result = new HashMap<>();
             result.put("email", user.get().getEmail());

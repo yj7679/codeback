@@ -139,5 +139,11 @@ public class UserService  {
     }
 
 
+    public Optional<User> findById(long userNumber) {
+        return userRepository.findById(userNumber);
+    }
 
+    public void deleteById(long userNumber) {
+        userRepository.deleteById(userNumber);
+    }
 }
