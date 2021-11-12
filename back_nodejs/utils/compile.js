@@ -17,6 +17,7 @@ module.exports = (data)=>{
     const req = new Promise((resolve, reject)=>{
         request({
             url: 'https://api.jdoodle.com/v1/execute',
+            encoding : null,
             method: "POST",
             json: compile_data
         }, (err, resp, body)=>{
