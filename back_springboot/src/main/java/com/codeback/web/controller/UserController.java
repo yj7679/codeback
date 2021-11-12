@@ -8,6 +8,8 @@ import com.codeback.web.dto.UserSaveRequestDto;
 import com.codeback.web.dto.UserUpdateRequestDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -38,6 +41,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    public Key getSignedKey(String secret) { // InitializingBean 에서 오버라이드 -> 빈이 생성되고 주입된후 시크릿 값을 Base64 Decode해서 key변수에 할당하려고
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
     //회원 가입 성공 실패는 status code로만 판단.
     @ApiOperation(value = "회원가입", notes = "회원가입 진행합니다.")
     @PostMapping("/signup")
@@ -66,7 +73,7 @@ public class UserController {
     public ResponseEntity<?> update(@CookieValue(name = "accessToken", required = false) String accessToken, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
             userService.save((Long)claims.get("userNumber"), userUpdateRequestDto);
 
@@ -82,7 +89,7 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@CookieValue(name = "accessToken", required = false) String accessToken) {
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
             userService.deleteUser(claims.get("userNumber").toString());
 
@@ -97,7 +104,7 @@ public class UserController {
     public ResponseEntity<?> searchUser(@CookieValue(name = "accessToken", required = false) String accessToken) {
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
             Optional<User> user = userService.findUserByEmail(claims.get("sub").toString());
 
