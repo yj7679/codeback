@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import StudyTemplate from './template';
 import { DataInput, DataOutput, Editor, NicknameForm, OpenViduMain, StudyHeader } from 'components';
 import useStudy from 'hooks/useStudy';
@@ -9,12 +9,19 @@ import { getRandomColor } from 'util/random-color';
 import { msg } from 'util/message';
 import SocketClient from 'config/socket';
 
+type LocationState = {
+  host: boolean;
+};
+
 const Study = observer(() => {
+  const location = useLocation<LocationState>();
   const { info } = useAuth();
   const study = useStudy();
   const { id }: { id: string } = useParams();
   const [nickname, setNickname] = useState<string | undefined>(undefined);
   const [isExistStudy, setIsExistStudy] = useState(false);
+
+  console.log(location.state);
 
   useEffect(() => {
     study
@@ -26,7 +33,12 @@ const Study = observer(() => {
       });
 
     const clear = () => {
-      study.leaveStudy();
+      if (location.state && location.state.host) {
+        study.leaveStudy().then(() => {
+          SocketClient.io.emit('roomDeleted');
+        });
+      }
+
       SocketClient.close();
     };
 
@@ -36,7 +48,7 @@ const Study = observer(() => {
     return () => {
       clear();
     };
-  }, [study, id]);
+  }, [study, id, location.state]);
 
   useEffect(() => {
     if (info != null) {
@@ -46,9 +58,8 @@ const Study = observer(() => {
 
   useEffect(() => {
     if (nickname == null) return;
+    SocketClient.join(id, nickname);
     try {
-      SocketClient.connect(id, nickname);
-
       SocketClient.io.on('join', ({ nickname: _nickname }: { nickname: string }) => {
         msg('Success', `${_nickname}님이 입장하셨습니다.`);
       });

@@ -21,7 +21,7 @@ const CreateStudyBtn = () => {
 
     study
       .getStudyId()
-      .then((studyId) => history.push(`/study/${studyId}`))
+      .then((studyId) => history.push(`/study/${studyId}`, { host: true }))
       .catch((err) => msg('Error', err.message));
   };
 
