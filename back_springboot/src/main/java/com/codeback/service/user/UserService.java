@@ -79,14 +79,7 @@ public class UserService  {
         });
     }
 
-    public void deleteUser(String email) {
-        Optional<User> user = findUserByEmail(email);
 
-        user.ifPresent(selectUser -> {
-            System.out.println("이메일이 있는사람이라 탈퇴해야함");
-            userRepository.delete(selectUser);
-        });
-    }
     @Transactional
     public void updatePassword(PasswordUpdateRequestDto passwordUpdateRequestDto) {
         Optional<User> user = findUserByEmail(passwordUpdateRequestDto.getEmail());

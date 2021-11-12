@@ -45,13 +45,14 @@ public class RoomService {
 
     }
 
-    @Transactional
-    public void deleteRoom(Long userNumber) {
-        roomRepository.deleteByUserUserNumber(userNumber);
-    }
 
     public Optional<Room> verifyRoom(String roomId) {
         Optional<Room> room = roomRepository.findByRoomId(roomId);
         return room;
+    }
+
+    @Transactional
+    public void deleteByUserNumber(long userNumber) {
+        roomRepository.deleteByUserUserNumber(userNumber);
     }
 }
