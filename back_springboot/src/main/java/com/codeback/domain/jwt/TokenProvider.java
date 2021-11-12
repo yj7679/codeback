@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
-public class TokenProvider implements InitializingBean {
+public class TokenProvider{
 	// 서버에서 저장할 암호에 쓰는 키
 	@Value("${tokenSecret}")
 	private String tokenSecret;
@@ -39,44 +39,15 @@ public class TokenProvider implements InitializingBean {
 
 	private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
-	private static final String AUTHORITIES_KEY = "auth";
 
-	private final String secret;
-
-	private Key key;
-
-	public TokenProvider(@Value("${jwt.secret}") String secret) {
-		this.secret = secret;
-	}
-
-	@Override
-	public void afterPropertiesSet() { // InitializingBean 에서 오버라이드 -> 빈이 생성되고 주입된후 시크릿 값을 Base64 Decode해서 key변수에 할당하려고
+	public Key getSignedKey(String secret) { // InitializingBean 에서 오버라이드 -> 빈이 생성되고 주입된후 시크릿 값을 Base64 Decode해서 key변수에 할당하려고
 		byte[] keyBytes = Decoders.BASE64.decode(secret);
-		this.key = Keys.hmacShaKeyFor(keyBytes);
+		return Keys.hmacShaKeyFor(keyBytes);
 	}
-
-	// Token에 담겨있는 정보를 이용해 Authentication 객체를 리턴하는 메소드
-	public Authentication getAuthentication(String token) {
-
-		// 토큰을 이용해서 클레임을 생성
-		Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-
-		// 클레임에서 권한정보 빼냄
-		Collection<? extends GrantedAuthority> authorities = Arrays
-				.stream(claims.get(AUTHORITIES_KEY).toString().split(",")).map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
-
-		// 빼낸 권한정보로 유저객체를 생성
-		User principal = new User(claims.getSubject(), "", authorities);
-
-		// 유저객체와 토큰, 권한정보로 Authentication 객체 리턴
-		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-	}
-
 	// 토큰의 유효성 검사하는 메소드
 	public boolean validateToken(String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			Jwts.parserBuilder().setSigningKey(getSignedKey(tokenSecret)).build().parseClaimsJws(token);
 			logger.info("올바른 JWT");
 			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
@@ -91,43 +62,51 @@ public class TokenProvider implements InitializingBean {
 		return false;
 	}
 
-
-
-
-	public TokenDto generateAccessToken(String subject) {
+	public TokenDto generateAccessToken(Long userNumber) {
 		Date now = new Date();
 		Long duration = now.getTime() + tokenExpirationMsec;
 		Date expiryDate = new Date(duration);
+		Claims claims = Jwts.claims();
+		claims.put("userNumber", userNumber);
 
 		String token = Jwts.builder()
-				.setSubject(subject)
+				.setClaims(claims)
 				.setIssuedAt(now)
 				.setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS512, tokenSecret)
+				.signWith(getSignedKey(tokenSecret),SignatureAlgorithm.HS512)
 				.compact();
 		return new TokenDto(TokenDto.TokenType.ACCESS, token, duration, LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault()));
 	}
 
-	public TokenDto generateRefreshToken(String subject) {
+	public TokenDto generateRefreshToken(Long userNumber) {
 		Date now = new Date();
 		Long duration = now.getTime() + refreshTokenExpirationMsec;
 		Date expiryDate = new Date(duration);
+
+		Claims claims = Jwts.claims();
+		claims.put("userNumber", userNumber);
+
 		String token = Jwts.builder()
-				.setSubject(subject)
+				.setClaims(claims)
 				.setIssuedAt(now)
 				.setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS512, tokenSecret)
+				.signWith(getSignedKey(tokenSecret),SignatureAlgorithm.HS512)
 				.compact();
+
 		return new TokenDto(TokenDto.TokenType.REFRESH, token, duration, LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault()));
 	}
 
 	public String getUsernameFromToken(String token) {
-		Claims claims = Jwts.parserBuilder().setSigningKey(tokenSecret).build().parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(tokenSecret)).build().parseClaimsJws(token).getBody();
 		return claims.getSubject();
 	}
 
+	public Long getUsernumberFromToken(String token) {
+		Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(tokenSecret)).build().parseClaimsJws(token).getBody();
+		return Long.parseLong(claims.get("userNumber").toString());
+	}
 	public LocalDateTime getExpiryDateFromToken(String token) {
-		Claims claims = Jwts.parserBuilder().setSigningKey(tokenSecret).build().parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(tokenSecret)).build().parseClaimsJws(token).getBody();
 		return LocalDateTime.ofInstant(claims.getExpiration().toInstant(), ZoneId.systemDefault());
 	}
 

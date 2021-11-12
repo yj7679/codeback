@@ -6,11 +6,14 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Author: TCMALTUNKAN - MEHMET ANIL ALTUNKAN
  * @Date: 22.11.2019:15:10, Cum
  **/
-@Component
+@Service
 public class CookieUtil {
     @Value("${accessTokenCookieName}")
     private String accessTokenCookieName;
@@ -72,5 +75,39 @@ public class CookieUtil {
                 .httpOnly(true)
                 .sameSite("None")
                 .build();
+    }
+
+    public String getAccessTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies==null){
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (accessTokenCookieName.equals(cookie.getName())) {
+                String accessToken = cookie.getValue();
+                if (accessToken == null) return null;
+
+                return SecurityCipher.decrypt(accessToken);
+            }
+        }
+        return null;
+    }
+
+    public String getRefreshTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies==null){
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (refreshTokenCookieName.equals(cookie.getName())) {
+                String accessToken = cookie.getValue();
+                if (accessToken == null) return null;
+
+                return SecurityCipher.decrypt(accessToken);
+            }
+        }
+        return null;
     }
 }

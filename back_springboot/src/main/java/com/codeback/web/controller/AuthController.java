@@ -92,8 +92,8 @@ public class AuthController {
         TokenDto newAccessToken;
         TokenDto newRefreshToken;
 
-        newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
-        newRefreshToken = tokenProvider.generateRefreshToken(user.getEmail());
+        newAccessToken = tokenProvider.generateAccessToken(user.getUserNumber());
+        newRefreshToken = tokenProvider.generateRefreshToken(user.getUserNumber());
         userService.addAccessTokenCookie(responseHeaders, newAccessToken);
         userService.addRefreshTokenCookie(responseHeaders, newRefreshToken);
         LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
@@ -101,13 +101,7 @@ public class AuthController {
     }
 
 
-    @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoginResponseDto> refreshToken(@CookieValue(name = "accessToken", required = false) String accessToken,
-                                                      @CookieValue(name = "refreshToken", required = false) String refreshToken) {
-        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
-        return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
-    }
+
 
     @GetMapping(value = "/duplicate/email/{email}")
     public ResponseEntity<?> duplicateEmailCheck(@PathVariable String email) {
