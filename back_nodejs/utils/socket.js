@@ -17,7 +17,7 @@ module.exports = (server) => {
 
             const {roomId, nickname} = socket;
 
-            // if data has roomId and language
+            // if socket has roomId and nickname
             if(roomId && nickname) {
                 io.to(roomId).emit('leave', {
                     'nickname' : nickname
@@ -46,21 +46,11 @@ module.exports = (server) => {
             }
         })
 
-        // leave room
-        // socket.on('leave', (data)=>{
-        //     const roomId = socket.roomId;
-        //     const {nickname} = data;
-
-        //     // if data has roomId and language
-        //     if(roomId && nickname) {
-        //         io.to(roomId).emit('leave', {
-        //             'nickname' : nickname
-        //         });
-        //     }
-        //     else{
-        //         console.log('no roomId or nickname');
-        //     }
-        // })
+        // room deleted
+        socket.on('roomDeleted', ()=>{
+            const roomId = socket.roomId;
+            if(roomId) io.to(roomId).emit('roomDeleted');
+        })
 
         // change language
         socket.on('language', (data)=>{
@@ -77,7 +67,7 @@ module.exports = (server) => {
 
             const roomId = socket.roomId;
             // emit pending state
-            if(roomId) io.to(roomId).emit('compilePending', {'pending':'true'});
+            if(roomId) io.to(roomId).emit('compilePending');
 
             let compile_result = null;
             try{
