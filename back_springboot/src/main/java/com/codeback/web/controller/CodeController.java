@@ -7,6 +7,8 @@ import com.codeback.web.dto.CodeSaveRequestDto;
 import com.codeback.web.dto.CodeSearchResponseDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Key;
 import java.util.List;
 
 @Api(tags = {"Code"})
@@ -26,6 +30,10 @@ public class CodeController {
     @Value("${tokenSecret}")
     private String key;
 
+    public Key getSignedKey(String secret) { // InitializingBean 에서 오버라이드 -> 빈이 생성되고 주입된후 시크릿 값을 Base64 Decode해서 key변수에 할당하려고
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
     @ApiOperation(value = "코드 저장", notes = "코드타이틀,코드설명,코드내용을 입력받아 저장")
     @PostMapping("")
     public ResponseEntity<?> saveCode(@CookieValue(name = "accessToken", required = false) String accessToken, @RequestBody CodeSaveRequestDto codeSaveRequestDto){
@@ -34,7 +42,7 @@ public class CodeController {
             //이메일로 유저 번호 찾은다음 저장하는걸로 퉁
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             String email = claims.get("sub").toString();
 
             System.out.println(email);
@@ -55,7 +63,7 @@ public class CodeController {
         try {
             //액세스 토큰안에 있는 이메일 주소로 코드 내역을 확인해서 리턴
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             String email = claims.get("sub").toString();
 
             System.out.println(email);
@@ -79,7 +87,7 @@ public class CodeController {
             //다른 이메일로 접속해서 볼려고하면 패스
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             String email = claims.get("sub").toString();
 
             CodeSearchResponseDto dto = codeService.getCodeByCodeNumber(email,codeNumber);

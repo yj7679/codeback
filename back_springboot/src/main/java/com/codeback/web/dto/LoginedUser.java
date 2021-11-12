@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Data
 public class LoginedUser {
-    private String email;
+    private Long userNumber;
     private String authority;
 
-    public LoginedUser(String email, String authority){
-        this.email = email;
+    public LoginedUser(Long userNumber, String authority){
+        this.userNumber = userNumber;
         this.authority = authority;
     }
 }

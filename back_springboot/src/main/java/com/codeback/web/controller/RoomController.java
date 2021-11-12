@@ -7,6 +7,8 @@ import com.codeback.web.dto.RoomSaveRequestDto;
 import com.codeback.web.dto.RoomVerifyDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Key;
 import java.util.Optional;
 
 @Api(tags = {"Room"})
@@ -32,6 +35,10 @@ public class RoomController {
     @Value("${tokenSecret}")
     private String key;
 
+    public Key getSignedKey(String secret) { // InitializingBean 에서 오버라이드 -> 빈이 생성되고 주입된후 시크릿 값을 Base64 Decode해서 key변수에 할당하려고
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
     // req: 유저 닉네임
     // res: 해시된 방 이름
     //jwt로 바꿔야함. jwt없이 user id로만 방만들기 기능
@@ -41,9 +48,10 @@ public class RoomController {
         try{
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
-
-            String roomId = roomService.makeRoom(claims.get("sub").toString());
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
+            System.out.println(claims.toString());
+            String roomId = roomService.makeRoom(Long.parseLong(claims.get("userNumber").toString()));
+            System.out.println(roomId);
             return new ResponseEntity<String>(roomId,HttpStatus.OK);
         }
         catch (Exception e){
@@ -53,18 +61,21 @@ public class RoomController {
     }
 
     @ApiOperation(value = "방 삭제", notes = "방 삭제.")
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteRoom(@CookieValue(name = "accessToken", required = false) String accessToken){
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteRoom(@CookieValue(name = "accessToken", required = false) String accessToken, @RequestParam String roomid){
+        System.out.println("zzzzz");
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
 
-            roomService.deleteRoom(claims.get("sub").toString());
-            return new ResponseEntity<>(HttpStatus.OK);
+            roomService.deleteRoom(Long.parseLong(claims.get("userNumber").toString()));
+            return new ResponseEntity<>("true",HttpStatus.OK);
         }
         catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            // 비회원이 회원 가입 하는 경우
+            System.out.println(e.getStackTrace());
+            return new ResponseEntity<>("false",HttpStatus.OK);
         }
 
     }

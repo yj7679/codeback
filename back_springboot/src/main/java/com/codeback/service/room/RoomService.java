@@ -22,12 +22,12 @@ public class RoomService {
 
     // 사용자 닉네임과 현재 시각으로 HASHING해서 RoomId만들어서 저장하고 return하고
     @Transactional
-    public String makeRoom(String email) {
+    public String makeRoom(Long userNumber) {
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findById(userNumber);
         User userEntity = user.get();
         long time = System.currentTimeMillis();
-        String tempEmail[] = email.split("@");
+        String tempEmail[] = userEntity.getEmail().split("@");
 
         // 초단위까지해서 유일 값 만들기
         String t = Long.toString(time);
@@ -46,14 +46,8 @@ public class RoomService {
     }
 
     @Transactional
-    public void deleteRoom(String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        User user = userOptional.get();
-
-
-        roomRepository.deleteByUserUserNumber(user.getUserNumber());
-
-
+    public void deleteRoom(Long userNumber) {
+        roomRepository.deleteByUserUserNumber(userNumber);
     }
 
     public Optional<Room> verifyRoom(String roomId) {

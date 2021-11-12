@@ -1,6 +1,7 @@
 package com.codeback.config.redis;
 
 import com.codeback.web.dto.CacheKey;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,21 +18,21 @@ import java.util.Map;
 
 @EnableCaching
 @Configuration
-public class RedisCacheConfig {
+public class RedisCacheConfig  {
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
                 .disableCachingNullValues()
-                .entryTtl(Duration.ofSeconds(CacheKey.DEFAULT_EXPIRE_SEC))
+                .entryTtl(Duration.ofSeconds(1000 * 30)) // 3일
                 .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(RedisSerializationContext
                         .SerializationPair
                         .fromSerializer(new StringRedisSerializer()));
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put(CacheKey.USER,
+        cacheConfigurations.put(CacheKey.KEY,
                 RedisCacheConfiguration.defaultCacheConfig()
-                        .entryTtl(Duration.ofSeconds(CacheKey.USER_EXPIRE_SEC)));
+                        .entryTtl(Duration.ofSeconds(1000 * 30)));
 
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(connectionFactory)

@@ -64,7 +64,18 @@ public class UserService  {
             selectUser.setNickname((userUpdateRequestDto.getNickname()));
             selectUser.setPassword(passwordEncoder.encode(userUpdateRequestDto.getPassword()));
 
-            //userRepository.save(selectUser);
+            //userRepository.save(selectUser); transactional로 그냥 저장됨
+        });
+    }
+    @Transactional
+    public void save(Long userNumber, UserUpdateRequestDto userUpdateRequestDto) {
+        Optional<User> user = userRepository.findById(userNumber);
+
+        user.ifPresent(selectUser -> {
+            selectUser.setNickname((userUpdateRequestDto.getNickname()));
+            selectUser.setPassword(passwordEncoder.encode(userUpdateRequestDto.getPassword()));
+
+            //userRepository.save(selectUser); transactional로 그냥 저장됨
         });
     }
 
@@ -95,54 +106,7 @@ public class UserService  {
     }
 
 
-    public ResponseEntity<LoginResponseDto> login(LoginRequestDto loginRequest, String accessToken, String refreshToken) {
-        String email = loginRequest.getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found with email " + email));
 
-        Boolean accessTokenValid = tokenProvider.validateToken(accessToken);
-        Boolean refreshTokenValid = tokenProvider.validateToken(refreshToken);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        TokenDto newAccessToken;
-        TokenDto newRefreshToken;
-        if (!accessTokenValid && !refreshTokenValid) {
-            newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
-            newRefreshToken = tokenProvider.generateRefreshToken(user.getEmail());
-            addAccessTokenCookie(responseHeaders, newAccessToken);
-            addRefreshTokenCookie(responseHeaders, newRefreshToken);
-        }
-
-        if (!accessTokenValid && refreshTokenValid) {
-            newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
-            addAccessTokenCookie(responseHeaders, newAccessToken);
-        }
-
-        if (accessTokenValid && refreshTokenValid) {
-            newAccessToken = tokenProvider.generateAccessToken(user.getEmail());
-            newRefreshToken = tokenProvider.generateRefreshToken(user.getEmail());
-            addAccessTokenCookie(responseHeaders, newAccessToken);
-            addRefreshTokenCookie(responseHeaders, newRefreshToken);
-        }
-
-        LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
-        return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
-
-    }
-    public ResponseEntity<LoginResponseDto> refresh(String accessToken, String refreshToken) {
-        Boolean refreshTokenValid = tokenProvider.validateToken(refreshToken);
-        if (!refreshTokenValid) {
-            throw new IllegalArgumentException("Refresh Token is invalid!");
-        }
-
-        String currentUserEmail = tokenProvider.getUsernameFromToken(accessToken);
-
-        TokenDto newAccessToken = tokenProvider.generateAccessToken(currentUserEmail);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(newAccessToken.getTokenValue(), newAccessToken.getDuration()).toString());
-
-        LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
-        return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
-    }
 
     public UserSummary getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -173,6 +137,7 @@ public class UserService  {
 
         return ResponseEntity.ok().headers(responseHeaders).body("eMail SUCCESS");
     }
+
 
 
 }

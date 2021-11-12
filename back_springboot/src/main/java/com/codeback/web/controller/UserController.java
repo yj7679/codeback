@@ -63,9 +63,12 @@ public class UserController {
 
     @ApiOperation(value = "회원정보 수정", notes = "이메일은 바꾸고자하는사람 | 닉네임,비밀번호는 바꾸고싶은거 입력")
     @PutMapping("")
-    public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+    public ResponseEntity<?> update(@CookieValue(name = "accessToken", required = false) String accessToken, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         try {
-            userService.save(userUpdateRequestDto);
+            String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
+            //System.out.println(claims.get("sub").toString());
+            userService.save((Long)claims.get("userNumber"), userUpdateRequestDto);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -81,7 +84,7 @@ public class UserController {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
             Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
-            userService.deleteUser(claims.get("sub").toString());
+            userService.deleteUser(claims.get("userNumber").toString());
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
