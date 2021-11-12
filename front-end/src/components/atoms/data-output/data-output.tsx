@@ -13,6 +13,10 @@ const DataOutput = observer(() => {
       editor.compileState = 'Done';
       editor.output = message.output;
     });
+
+    SocketClient.io.on('compilePending', () => {
+      editor.compileState = 'Pending';
+    });
   }, [editor]);
 
   if (editor.compileState === 'Pending') {
