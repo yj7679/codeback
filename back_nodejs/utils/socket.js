@@ -14,6 +14,15 @@ module.exports = (server) => {
         // disconnect event
         socket.on('disconnect', () => {
             console.log('client disconnect! socket.id : ', socket.id);
+
+            const {roomId, nickname} = socket;
+
+            // if data has roomId and language
+            if(roomId && nickname) {
+                io.to(roomId).emit('leave', {
+                    'nickname' : nickname
+                });
+            }
         });
 
         // client join room
@@ -24,6 +33,7 @@ module.exports = (server) => {
             if(roomId && nickname){
                 socket.join(roomId);
                 socket.roomId = roomId;
+                socket.nickname = nickname;
 
                 console.log(socket.id,' join ',roomId);
                 io.to(roomId).emit('join',{
@@ -32,25 +42,25 @@ module.exports = (server) => {
             }
             // if data has not roomId
             else{
-                console.log('no roomId');
+                console.log('no roomId or nickname');
             }
         })
 
         // leave room
-        socket.on('leave', (data)=>{
-            const roomId = socket.roomId;
-            const {nickname} = data;
+        // socket.on('leave', (data)=>{
+        //     const roomId = socket.roomId;
+        //     const {nickname} = data;
 
-            // if data has roomId and language
-            if(roomId && nickname) {
-                io.to(roomId).emit('leave', {
-                    'nickname' : nickname
-                });
-            }
-            else{
-                console.log('no roomId or nickname');
-            }
-        })
+        //     // if data has roomId and language
+        //     if(roomId && nickname) {
+        //         io.to(roomId).emit('leave', {
+        //             'nickname' : nickname
+        //         });
+        //     }
+        //     else{
+        //         console.log('no roomId or nickname');
+        //     }
+        // })
 
         // change language
         socket.on('language', (data)=>{
