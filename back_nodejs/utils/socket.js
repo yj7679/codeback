@@ -18,21 +18,37 @@ module.exports = (server) => {
 
         // client join room
         socket.on('join', (data)=>{
-            const {roomId} = data;
+            const {roomId, nickname} = data;
 
             // if data has roomId
-            if(roomId){
+            if(roomId && nickname){
                 socket.join(roomId);
                 socket.roomId = roomId;
 
                 console.log(socket.id,' join ',roomId);
                 io.to(roomId).emit('join',{
-                    'chat' : socket.id + ' is join!'
+                    'nickname' : nickname
                 });
             }
             // if data has not roomId
             else{
                 console.log('no roomId');
+            }
+        })
+
+        // leave room
+        socket.on('leave', (data)=>{
+            const roomId = socket.roomId;
+            const {nickname} = data;
+
+            // if data has roomId and language
+            if(roomId && nickname) {
+                io.to(roomId).emit('leave', {
+                    'nickname' : nickname
+                });
+            }
+            else{
+                console.log('no roomId or nickname');
             }
         })
 
@@ -43,7 +59,7 @@ module.exports = (server) => {
 
             // if data has roomId and language
             if(roomId && language) io.to(roomId).emit('language', language);
-        } )
+        })
 
         // compile code
         socket.on('compile', async (data) => {
