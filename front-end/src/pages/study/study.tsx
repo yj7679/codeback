@@ -25,9 +25,16 @@ const Study = observer(() => {
         msg('Error', err.message);
       });
 
-    return () => {
+    const clear = () => {
       study.leaveStudy();
       SocketClient.close();
+    };
+
+    window.addEventListener('beforeunload', clear);
+    window.removeEventListener('unload', clear);
+
+    return () => {
+      clear();
     };
   }, [study, id]);
 
@@ -55,7 +62,9 @@ const Study = observer(() => {
         <StudyTemplate
           studyHeader={<StudyHeader />}
           editor={<Editor cellId={id} userName={nickname} cursorColor={getRandomColor()} />}
-          dataInput={<DataInput />}
+          dataInput={
+            <DataInput cellId={id + 'input'} userName={nickname} cursorColor={getRandomColor()} />
+          }
           dataOutput={<DataOutput />}
           videoRoom={<OpenViduMain roomTitle="1234" pinNumber={id} nickname={nickname} />}
         />
