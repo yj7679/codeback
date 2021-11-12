@@ -61,21 +61,22 @@ public class RoomController {
     }
 
     @ApiOperation(value = "방 삭제", notes = "방 삭제.")
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteRoom(@CookieValue(name = "accessToken", required = false) String accessToken, @RequestParam String roomid){
-        System.out.println("zzzzz");
+    @DeleteMapping("")
+    public ResponseEntity<?> deleteRoom(@CookieValue(name = "accessToken", required = false) String accessToken){
+
+
         try {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
             Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
 
-            roomService.deleteRoom(Long.parseLong(claims.get("userNumber").toString()));
-            return new ResponseEntity<>("true",HttpStatus.OK);
+            roomService.deleteByUserNumber(Long.parseLong(claims.get("userNumber").toString()));
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e){
             // 비회원이 회원 가입 하는 경우
             System.out.println(e.getStackTrace());
-            return new ResponseEntity<>("false",HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }

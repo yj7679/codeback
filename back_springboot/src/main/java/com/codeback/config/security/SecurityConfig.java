@@ -91,7 +91,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/auth/duplicate/email/**").permitAll()
 				.antMatchers("/auth/email/confirm").permitAll()
 				.antMatchers("/room/verification").permitAll()
-				.antMatchers("/room/delete").permitAll()
 				.antMatchers("/user/passwordUpdate").permitAll()
 
 
