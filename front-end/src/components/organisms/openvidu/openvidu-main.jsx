@@ -126,9 +126,6 @@ export default class OpenViduMain extends Component {
         });
 
         mySession.on('streamDestroyed', (event) => {
-          SocketClient.io.emit('leave', {
-            nickname: JSON.parse(event.stream.streamManager.stream.connection.data).clientData
-          });
           this.deleteSubscriber(event.stream.streamManager);
         });
 
