@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { OptionType } from '../model/editor-model';
+import { CompileResult, OptionType } from '../model/editor-model';
 import SocketClient from 'config/socket';
 
 export interface Editor {
@@ -9,7 +9,7 @@ export interface Editor {
   theme: OptionType;
   compileState: 'Pending' | 'Done';
   input: string;
-  output: string;
+  compileResult: CompileResult | undefined;
   compile: () => void;
 }
 
@@ -26,7 +26,7 @@ export class EditorImpl implements Editor {
 
   input = '';
 
-  output = '';
+  compileResult: CompileResult | undefined = undefined;
 
   constructor() {
     makeAutoObservable(this);
