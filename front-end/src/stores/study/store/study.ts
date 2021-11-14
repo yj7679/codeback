@@ -7,6 +7,7 @@ import studyRepository from '../repository/study-repository';
 export interface Study {
   studyId: string | undefined;
   getStudyId: () => Promise<string | undefined>;
+  leaveStudy: () => Promise<void>;
   verifyStudy: (d: string) => Promise<void>;
 }
 
