@@ -1,0 +1,12 @@
+.updateBtn {
+  width: 100%;
+  margin-bottom: 0.3em;
+  border: none;
+}
+
+.withdrawlBtn {
+  width: 100%;
+  margin-bottom: 0.3em;
+  background-color: #e05880;
+  border: none;
+}
