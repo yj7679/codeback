@@ -24,7 +24,7 @@ const AvatarBtn = () => {
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <Button className={styles.menuBtn} type="text">
+        <Button className={styles.menuBtn} type="text" onClick={() => history.push('/account')}>
           회원정보
         </Button>
       </Menu.Item>
