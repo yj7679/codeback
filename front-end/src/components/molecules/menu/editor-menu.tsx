@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Select } from 'antd';
+import { Divider, Select } from 'antd';
 import useEditor from 'hooks/useEditor';
 import { OptionType } from 'stores/editor/model/editor-model';
 import { CssKeyObject } from 'types/common';
@@ -50,16 +50,13 @@ const EditorMenu = observer(() => {
 
   return (
     <div style={styles.container}>
-      <CompileBtn style={styles.option} />
       <UrlCopyBtn style={styles.option} />
-      <Select
-        labelInValue
-        defaultValue={editor.theme}
-        style={{ ...styles.option, ...styles.theme }}
-        onChange={handleThemeChange}>
-        <Option value="Dark">Dark</Option>
-        <Option value="Bright">Bright</Option>
-      </Select>
+
+      <Divider type="vertical" />
+
+      <CompileBtn style={styles.option} />
+
+      <Divider type="vertical" />
 
       <Select
         labelInValue
@@ -70,6 +67,15 @@ const EditorMenu = observer(() => {
         <Option value="Java">Java</Option>
         <Option value="Python">Python</Option>
         <Option value="C++">C++</Option>
+      </Select>
+
+      <Select
+        labelInValue
+        defaultValue={editor.theme}
+        style={{ ...styles.option, ...styles.theme }}
+        onChange={handleThemeChange}>
+        <Option value="Dark">Dark</Option>
+        <Option value="Bright">Bright</Option>
       </Select>
 
       <Select
