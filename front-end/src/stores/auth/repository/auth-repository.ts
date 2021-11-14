@@ -41,6 +41,19 @@ class AuthRepository {
   async signup(values: SignupValues) {
     return this.instance.post(`${config.api}/user/signup`, values);
   }
+
+  async update(values: SignupValues) {
+    const { email, nickname, password } = values;
+    return this.instance.put(`${config.api}/user`, {
+      email,
+      nickname,
+      password
+    });
+  }
+
+  async deleteAccount() {
+    return this.instance.delete(`${config.api}/user`);
+  }
 }
 
 export default new AuthRepository(mainAxios);

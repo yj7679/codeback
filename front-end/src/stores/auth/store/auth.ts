@@ -5,10 +5,12 @@ import { LoginValues, SignupValues, UserInfo } from '../model/auth-model';
 import { handleServerError } from 'util/http-error';
 import {
   FAIL_TO_CONFIRM_AUTHCODE,
+  FAIL_TO_DELETE_ACCOUNT,
   FAIL_TO_GET_USEINFO,
   FAIL_TO_LOGIN,
   FAIL_TO_LOGOUT,
-  FAIL_TO_SIGNUP
+  FAIL_TO_SIGNUP,
+  FAIL_TO_UPDATE_ACCOUNT
 } from 'common/string-template';
 
 export interface Auth {
@@ -36,10 +38,8 @@ export class AuthImpl implements Auth {
   async getUserInfo() {
     try {
       const res = await authRepository.getUserInfo();
-      console.log(res);
       runInAction(() => {
         this.info = { ...res.data };
-        console.log('this info', this.info);
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -151,6 +151,37 @@ export class AuthImpl implements Auth {
         const axiosError = error as AxiosError;
         handleServerError(axiosError);
         throw new Error(FAIL_TO_SIGNUP);
+      }
+    }
+  }
+
+  async update(values: SignupValues) {
+    try {
+      await authRepository.update(values);
+      const { nickname } = values;
+      runInAction(() => {
+        this.info!.nickname = nickname;
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        handleServerError(axiosError);
+        throw new Error(FAIL_TO_UPDATE_ACCOUNT);
+      }
+    }
+  }
+
+  async deleteAccount() {
+    try {
+      await authRepository.deleteAccount();
+      runInAction(() => {
+        this.authenticated = false;
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        handleServerError(axiosError);
+        throw new Error(FAIL_TO_DELETE_ACCOUNT);
       }
     }
   }

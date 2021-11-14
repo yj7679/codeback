@@ -22,6 +22,7 @@ export { default as LoginModal } from './molecules/modal/login-modal/login-modal
 export { default as SignupForm } from './molecules/form/signup-form';
 export { default as LoginForm } from './molecules/form/login-form/login-form';
 export { default as NicknameForm } from './molecules/form/nickname-form/nickname-form';
+export { default as UserInfoForm } from './molecules/form/user-info-form/user-info-form';
 export { default as EditorMenu } from './molecules/menu/editor-menu';
 
 /* organisms */
