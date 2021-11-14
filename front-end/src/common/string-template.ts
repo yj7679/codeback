@@ -17,6 +17,12 @@ export const FAIL_TO_CONFIRM_AUTHCODE = '인증번호가 올바르지 않습니�
 
 export const COMPLETE_STUDY_URL_COPY = '방 주소 복사 완료';
 
+/* account */
+export const FAIL_TO_UPDATE_ACCOUNT = '회원정보 수정에 실패했습니다.';
+export const FAIL_TO_DELETE_ACCOUNT = '회원탈퇴에 실패했습니다.';
+export const SUCCESSED_IN_DELETE_ACCOUNT = '성공적으로 탈퇴하셨습니다.';
+export const SUCCESSED_IN_UPDATE_ACCOUNT = '성공적으로 회원정보를 변경했습니다.';
+
 /* login */
 export const FAIL_TO_LOGIN = '로그인에 실패하셨습니다.';
 export const SUCCESS_TO_LOGIN = '로그인에 성공했습니다.';
