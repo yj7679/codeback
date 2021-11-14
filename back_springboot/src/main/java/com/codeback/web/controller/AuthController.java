@@ -4,6 +4,7 @@ import com.codeback.domain.jwt.TokenProvider;
 import com.codeback.domain.user.User;
 import com.codeback.service.email.EmailService;
 import com.codeback.service.user.UserService;
+import com.codeback.util.RedisUtill;
 import com.codeback.util.SecurityCipher;
 import com.codeback.web.dto.*;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.Struct;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Random;
 
@@ -50,6 +52,9 @@ public class AuthController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private RedisUtill redisUtill;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -88,6 +93,8 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+
+
         HttpHeaders responseHeaders = new HttpHeaders();
         TokenDto newAccessToken;
         TokenDto newRefreshToken;
@@ -96,6 +103,10 @@ public class AuthController {
         newRefreshToken = tokenProvider.generateRefreshToken(user.getUserNumber());
         userService.addAccessTokenCookie(responseHeaders, newAccessToken);
         userService.addRefreshTokenCookie(responseHeaders, newRefreshToken);
+
+        // redis에 refresh토큰 저장
+        redisUtill.setData(newRefreshToken.getTokenValue(),newRefreshToken.getExpiryDate().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss")));
+
         LoginResponseDto loginResponse = new LoginResponseDto(LoginResponseDto.SuccessFailure.SUCCESS, "Auth successful. Tokens are created in cookie.");
         return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
     }

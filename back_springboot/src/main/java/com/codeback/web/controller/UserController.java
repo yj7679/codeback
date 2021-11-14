@@ -122,14 +122,12 @@ public class UserController {
     @PutMapping("/passwordUpdate")
     public ResponseEntity<?> passwordUpdate(HttpServletRequest request,@RequestBody PasswordUpdateRequestDto passwordUpdateRequestDto) {
         try {
-            System.out.println("2312312312312");
             String email = passwordUpdateRequestDto.getEmail();
             Optional<User> user = userService.findUserByEmail(email);
             Cookie[] cookies = request.getCookies();
             // 쿠키에 회원가입 진행 중이라는 signup 쿠키 없으면 잘못된 접근
             // 이메일이 db에없는 거면 잘못된 접근
             if(cookies == null || !user.isPresent()){
-                System.out.println("UNAUTHORIZED");
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
             for (Cookie cookie : cookies) {
