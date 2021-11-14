@@ -75,7 +75,7 @@ public class UserController {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
             Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
             //System.out.println(claims.get("sub").toString());
-            userService.save((Long)claims.get("userNumber"), userUpdateRequestDto);
+            userService.save(Long.parseLong(claims.get("userNumber").toString()), userUpdateRequestDto);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {

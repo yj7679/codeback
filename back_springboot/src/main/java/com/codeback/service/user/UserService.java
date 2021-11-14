@@ -73,6 +73,7 @@ public class UserService  {
 
         user.ifPresent(selectUser -> {
             selectUser.setNickname((userUpdateRequestDto.getNickname()));
+            selectUser.setEmail((userUpdateRequestDto.getEmail()));
             selectUser.setPassword(passwordEncoder.encode(userUpdateRequestDto.getPassword()));
 
             //userRepository.save(selectUser); transactional로 그냥 저장됨
