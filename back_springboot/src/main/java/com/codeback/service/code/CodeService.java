@@ -48,11 +48,10 @@ public class CodeService {
         System.out.println(code.getCodeDate());
         System.out.println(code.getUser().getUserNumber());
 
-        System.out.println("세이브전");
+
 
         codeRepository.save(code);
 
-        System.out.println("세이브후");
         return "성공";
 
     }

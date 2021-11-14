@@ -59,30 +59,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-		System.out.println("필터시작");
+
 		//리퀘스트에서 토큰을 받는다
 		String accessToken = cookieUtil.getAccessTokenFromCookie(httpServletRequest);
 		String refreshToken = cookieUtil.getRefreshTokenFromCookie(httpServletRequest);
+			if (accessToken == null && refreshToken == null){
 
-		if (accessToken == null && refreshToken == null){
-
-			System.out.println("토큰이 없음");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 		// 아래는 전부 토큰이 존재할 때
 		else if (!tokenProvider.validateToken(accessToken) && tokenProvider.validateToken(refreshToken)) {
 			// Refresh
-			System.out.println("들가긴함");
+
 			LocalDateTime expTimeFromTokenT = tokenProvider.getExpiryDateFromToken(refreshToken);
 			String expTimeFromToken = expTimeFromTokenT.format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
-			System.out.println(expTimeFromToken);
+
 			String expTimeFromRedis = redisUtill.getData(refreshToken);
-			System.out.println(expTimeFromToken);
-			System.out.println(expTimeFromRedis);
-			System.out.println("-------------");
+
 			if(!tokenProvider.validateToken(refreshToken) || !expTimeFromRedis.equals(expTimeFromToken)){
 				// 리프레시 토큰이 유효하지않거나, 레디스에 저장해놓은 만료시간이 다르면
-				System.out.println("이곳");
+
 				httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			}
 			else{
@@ -107,7 +103,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
 			//이후 SecurityContex에 set 한다
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			System.out.println("권한있음");
 			// 권한 있음 -> pass
 		}
 		filterChain.doFilter(httpServletRequest, httpServletResponse);
