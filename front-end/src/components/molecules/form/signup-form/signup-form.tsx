@@ -1,30 +1,12 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, Input, Button, Space } from 'antd';
-import { CssKeyObject } from 'types/common';
+import styles from './signup-form.module.css';
 import { SignupValues } from 'stores/auth/model/auth-model';
 import useAuth from 'hooks/useAuth';
 import { msg } from 'util/message';
 import inputValidator from 'util/input-validator';
-import { useHistory } from 'react-router-dom';
-
-const styles: CssKeyObject = {
-  loginModal: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  modalTitle: {
-    marginTop: '.4em',
-    fontFamily: 'titleFont',
-    color: '#1890FF'
-  },
-  btn: {
-    width: '100%',
-    marginBottom: '.3em',
-    backgroundColor: '#e05880',
-    border: 'none'
-  }
-};
+import { MANDATORY_EMAIL, SUCCESSED_IN_SIGNUP } from 'common/string-template';
 
 const SignupForm = () => {
   const auth = useAuth();
@@ -36,13 +18,16 @@ const SignupForm = () => {
   const signup = (values: SignupValues) => {
     auth
       .signup(values)
-      .then(() => history.push('/'))
+      .then(() => {
+        msg('Success', SUCCESSED_IN_SIGNUP);
+        history.push('/');
+      })
       .catch((err) => msg('Error', err.message));
   };
 
   const sendAuthCode = () => {
     if (form.getFieldValue('email') == null) {
-      msg('Error', '이메일을 입력해주세요.');
+      msg('Error', MANDATORY_EMAIL);
       return;
     }
 
@@ -139,7 +124,7 @@ const SignupForm = () => {
       </Form.Item>
 
       <Form.Item>
-        <Button htmlType="submit" type="primary" style={styles.btn}>
+        <Button htmlType="submit" type="primary" className={styles.btn}>
           회원가입
         </Button>
       </Form.Item>

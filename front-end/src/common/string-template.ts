@@ -14,6 +14,7 @@ export const INVALID_PASSWORD_FORMAT = '하나의 문자, 숫자 포함 최소 8
 
 export const FAIL_TO_SIGNUP = '회원가입 중 오류가 발생했습니다.';
 export const FAIL_TO_CONFIRM_AUTHCODE = '인증번호가 올바르지 않습니다.';
+export const SUCCESSED_IN_SIGNUP = '성공적으로 회원가입하셨습니다.';
 
 export const COMPLETE_STUDY_URL_COPY = '방 주소 복사 완료';
 
