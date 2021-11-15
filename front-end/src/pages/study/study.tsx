@@ -57,6 +57,7 @@ const Study = observer(() => {
     const clear = () => {
       if (location.state && location.state.host) {
         study.leaveStudy().then(() => {
+          console.log('방 삭제');
           SocketClient.getSocket().emit('roomDeleted');
           SocketClient.close();
         });
@@ -71,7 +72,7 @@ const Study = observer(() => {
     return () => {
       clear();
     };
-  }, [study, id, location.state, history]);
+  }, [study, id, location.state]);
 
   useEffect(() => {
     if (info != null) {
