@@ -58,7 +58,7 @@ const Study = observer(() => {
 
     const clear = () => {
       if (location.state && location.state.host) {
-        SocketClient.getSocket().emit('roomDeleted');
+        SocketClient.io.emit('roomDeleted');
         SocketClient.close();
         study.leaveStudy().then(() => {
           console.log('방 삭제');
