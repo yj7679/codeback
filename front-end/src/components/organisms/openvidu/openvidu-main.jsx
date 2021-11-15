@@ -43,11 +43,10 @@ export default class OpenViduMain extends Component {
     this.onbeforeunload();
     window.removeEventListener('beforeunload', this.onbeforeunload);
     window.removeEventListener('popstate', this.onbeforeunload);
-    this.leaveSession();
   }
 
   // 함수들
-  onbeforeunload(event) {
+  onbeforeunload() {
     this.leaveSession();
   }
 
