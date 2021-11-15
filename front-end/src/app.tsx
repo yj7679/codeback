@@ -6,6 +6,8 @@ import { routes } from 'routes/config';
 import { observer } from 'mobx-react-lite';
 import useAuth from 'hooks/useAuth';
 import { msg } from 'util/message';
+import { mainAxios } from 'config/axios';
+import { SUCCESS_TO_LOGOUT } from 'common/string-template';
 
 const App = observer(() => {
   const auth = useAuth();
@@ -18,6 +20,30 @@ const App = observer(() => {
         .catch((err) => msg('Error', err.message));
     }
   }, [auth]);
+
+  mainAxios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const {
+        config,
+        response: { status, data }
+      } = error;
+
+      if (status === 401) {
+        auth
+          .logout()
+          .then(() => {
+            msg('Info', SUCCESS_TO_LOGOUT);
+          })
+          .catch((err) => msg('Error', err.message));
+      } else if (status === 403 && data === 'access token refresh') {
+        const originalRequest = config;
+        return mainAxios(originalRequest);
+      }
+
+      return Promise.reject(error);
+    }
+  );
 
   return (
     <BrowserRouter>
