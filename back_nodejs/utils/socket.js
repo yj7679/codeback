@@ -29,7 +29,10 @@ module.exports = (server) => {
 
         // client join room
         socket.on('join', (data)=>{
-            const {roomId, nickname} = data;
+            const { roomId, nickname } = data;
+            console.log('new user join roomId, nickname : ', roomId, nickname);
+            console.log('roomlanguage : ', roomlanguage);
+            console.log('roomlanguage[roomId] : ', roomlanguage[roomId]);
 
             // if data has roomId
             if(roomId && nickname){
