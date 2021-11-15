@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
 import './app.css';
 import Router from 'routes/router';
 import { routes } from 'routes/config';
-import { observer } from 'mobx-react-lite';
 import useAuth from 'hooks/useAuth';
 import { msg } from 'util/message';
 import { mainAxios } from 'config/axios';
@@ -38,7 +39,7 @@ const App = observer(() => {
           .catch((err) => msg('Error', err.message));
       } else if (status === 403 && data === 'access token refresh') {
         const originalRequest = config;
-        return mainAxios(originalRequest);
+        return axios(originalRequest);
       }
 
       return Promise.reject(error);
