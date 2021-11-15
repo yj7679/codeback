@@ -121,7 +121,7 @@ public class JwtFilter extends OncePerRequestFilter {
 				httpServletResponse.setCharacterEncoding("utf-8");
 
 				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				httpServletResponse.getOutputStream().println("access token refresh");
+				httpServletResponse.getOutputStream().print("access token refresh");
 				return;
 
 			}
