@@ -9,6 +9,7 @@ import { getRandomColor } from 'util/random-color';
 import { msg } from 'util/message';
 import SocketClient from 'config/socket';
 import useEditor from 'hooks/useEditor';
+import { OptionType } from 'stores/editor/model/editor-model';
 
 type LocationState = {
   host: boolean;
@@ -29,22 +30,8 @@ const Study = observer(() => {
     try {
       SocketClient.io.on(
         'join',
-        ({ nickname: _nickname, language }: { nickname: string; language: string }) => {
-          switch (language) {
-            case 'JavaScript':
-              editor.language = { label: language, value: language };
-              break;
-            case 'cpp':
-              editor.language = { label: 'C++', value: 'C++' };
-              break;
-            case 'python3':
-              editor.language = { label: 'Python', value: 'Python' };
-              break;
-            case 'java':
-              editor.language = { label: 'Java', value: 'Java' };
-              break;
-          }
-
+        ({ nickname: _nickname, language }: { nickname: string; language: OptionType }) => {
+          editor.language = language;
           msg('Success', `${_nickname}님이 입장하셨습니다.`);
         }
       );
