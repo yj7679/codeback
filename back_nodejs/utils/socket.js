@@ -65,7 +65,7 @@ module.exports = (server) => {
         socket.on('language', (data)=>{
             const roomId = socket.roomId;
             
-            console.log('user change language roomId : ', roomId, ', language : ', language);
+            console.log('user change language roomId : ', roomId, ', language : ', data);
             if(data) roomlanguage[roomId] = data;
             // if data has roomId and language
             if(roomId && data) io.to(roomId).emit('language', data);
