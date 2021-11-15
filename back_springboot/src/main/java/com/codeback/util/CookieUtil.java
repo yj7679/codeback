@@ -102,10 +102,10 @@ public class CookieUtil {
 
         for (Cookie cookie : cookies) {
             if (refreshTokenCookieName.equals(cookie.getName())) {
-                String accessToken = cookie.getValue();
-                if (accessToken == null) return null;
+                String refreshToken = cookie.getValue();
+                if (refreshToken == null) return null;
 
-                return SecurityCipher.decrypt(accessToken);
+                return SecurityCipher.decrypt(refreshToken);
             }
         }
         return null;

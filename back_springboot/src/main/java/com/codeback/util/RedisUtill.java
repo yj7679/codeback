@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpCookie;
@@ -20,7 +21,7 @@ import java.time.ZoneId;
 @Service
 public class RedisUtill {
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate stringRedisTemplate;
 
     @Cacheable(value = CacheKey.KEY, key = "#key", unless = "#result == null")
     public String getData(String key){
