@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import StudyTemplate from './template';
 import { DataInput, DataOutput, Editor, NicknameForm, OpenViduMain, StudyHeader } from 'components';
 import useStudy from 'hooks/useStudy';
@@ -17,6 +17,7 @@ type LocationState = {
 
 const Study = observer(() => {
   const location = useLocation<LocationState>();
+  const history = useHistory();
   const { info } = useAuth();
   const editor = useEditor();
   const study = useStudy();
@@ -49,14 +50,13 @@ const Study = observer(() => {
       .verifyStudy(id)
       .then(() => setIsExistStudy(true))
       .catch((err) => {
-        history.go(-1);
+        history.push('/');
         msg('Error', err.message);
       });
 
     const clear = () => {
       if (location.state && location.state.host) {
         study.leaveStudy().then(() => {
-          console.log(SocketClient, SocketClient.io);
           SocketClient.getSocket().emit('roomDeleted');
           SocketClient.close();
         });
@@ -71,7 +71,7 @@ const Study = observer(() => {
     return () => {
       clear();
     };
-  }, [study, id, location.state]);
+  }, [study, id, location.state, history]);
 
   useEffect(() => {
     if (info != null) {
