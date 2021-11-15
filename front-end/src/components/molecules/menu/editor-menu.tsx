@@ -34,9 +34,7 @@ const EditorMenu = observer(() => {
   }, [editor]);
 
   const handleLanguageChange = (value: OptionType) => {
-    SocketClient.io.emit('language', {
-      language: value
-    });
+    SocketClient.io.emit('language', value);
     editor.language = value;
   };
 
