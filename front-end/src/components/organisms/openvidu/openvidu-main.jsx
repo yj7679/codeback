@@ -4,7 +4,6 @@ import { OpenVidu } from 'openvidu-browser';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import SocketClient from 'config/socket';
 // 컴포넌트
 import UserVideo from './user-video';
 
@@ -44,6 +43,7 @@ export default class OpenViduMain extends Component {
     this.onbeforeunload();
     window.removeEventListener('beforeunload', this.onbeforeunload);
     window.removeEventListener('popstate', this.onbeforeunload);
+    this.leaveSession();
   }
 
   // 함수들
