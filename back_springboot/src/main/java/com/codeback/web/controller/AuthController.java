@@ -103,7 +103,8 @@ public class AuthController {
         newRefreshToken = tokenProvider.generateRefreshToken(user.getUserNumber());
         userService.addAccessTokenCookie(responseHeaders, newAccessToken);
         userService.addRefreshTokenCookie(responseHeaders, newRefreshToken);
-
+        System.out.println("저장@!!!!");
+        System.out.println(newRefreshToken.getTokenValue());
         // redis에 refresh토큰 저장
         redisUtill.setData(newRefreshToken.getTokenValue(),newRefreshToken.getExpiryDate().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss")));
 
