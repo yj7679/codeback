@@ -64,13 +64,11 @@ module.exports = (server) => {
         // change language
         socket.on('language', (data)=>{
             const roomId = socket.roomId;
-            const { language } = data;
             
-            console.log(data);
             console.log('user change language roomId : ', roomId, ', language : ', language);
-            if(language) roomlanguage[roomId] = language;
+            if(data) roomlanguage[roomId] = data;
             // if data has roomId and language
-            if(roomId && language) io.to(roomId).emit('language', language);
+            if(roomId && data) io.to(roomId).emit('language', data);
         })
 
         // compile code
