@@ -30,9 +30,6 @@ module.exports = (server) => {
         // client join room
         socket.on('join', (data)=>{
             const { roomId, nickname } = data;
-            console.log('new user join roomId, nickname : ', roomId, nickname);
-            console.log('roomlanguage : ', roomlanguage);
-            console.log('roomlanguage[roomId] : ', roomlanguage[roomId]);
 
             // if data has roomId
             if(roomId && nickname){
@@ -43,8 +40,10 @@ module.exports = (server) => {
                 console.log(socket.id,' join ',roomId);
                 io.to(roomId).emit('join',{
                     'nickname' : nickname,
-                    'language' : roomlanguage[roomId] ? roomlanguage[roomId] : 'JavaScript'
+                    'language': roomlanguage[roomId] ? roomlanguage[roomId] : {'value' : 'JavaScript', 'label' : 'JavaScript', 'key' : 'JavaScript'}
                 });
+
+                console.log('new user join room! roomId : ', roomId, ', nickname : ', nickname, ', room language : ', roomlanguage[roomId]);
             }
             // if data has not roomId
             else{
@@ -55,7 +54,7 @@ module.exports = (server) => {
         // room deleted
         socket.on('roomDeleted', ()=>{
             const roomId = socket.roomId;
-            console.log('roomDeleted event!', roomId);
+            console.log('roomDeleted event! roomId : ', roomId);
             if(roomId) {
                 if(roomlanguage[roomId]) delete roomlanguage[roomId];
                 io.to(roomId).emit('roomDeleted');
