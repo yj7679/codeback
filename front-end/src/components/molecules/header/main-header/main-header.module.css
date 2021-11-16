@@ -5,7 +5,4 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5em;
-  background: var(--main-background-color);
-  background: -webkit-linear-gradient(to right, #f15f79, #b24592);
-  background: linear-gradient(to right, #f15f79, #b24592);
 }
