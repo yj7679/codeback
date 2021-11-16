@@ -23,7 +23,7 @@ class SocketClient {
   }
 
   close() {
-    this.io.close();
+    this.io.disconnect();
   }
 
   compile(source: string, inputData: string, language: string) {
