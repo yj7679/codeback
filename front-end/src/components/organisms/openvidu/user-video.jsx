@@ -7,8 +7,8 @@ import { FaMicrophoneSlash, FaMicrophone } from 'react-icons/fa';
 import { MdVideocamOff, MdVideocam } from 'react-icons/md';
 
 const UserVideo = ({ streamManager, isPublisher, isSpeak }) => {
-  const [isMic, setIsMic] = useState(true);
-  const [isCam, setIsCam] = useState(true);
+  const [isMic, setIsMic] = useState(false);
+  const [isCam, setIsCam] = useState(false);
 
   const onMicToggleHandler = () => {
     if (isMic) {
