@@ -1,11 +1,10 @@
-import { mainAxios } from 'config/axios';
 import React, { ReactNode, useEffect, useRef } from 'react';
 import styles from './index.module.css';
 import allGif from 'assets/imgs/codeback-all.gif';
 import camGif from 'assets/imgs/codeback-cam.gif';
 import codeGif from 'assets/imgs/codeback-code.gif';
-import { BackTop, Button } from 'antd';
-import { UpCircleOutlined, UpOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import { UpCircleOutlined } from '@ant-design/icons';
 
 type Props = {
   header: ReactNode;
@@ -32,9 +31,6 @@ const LandingTemplate = ({ header, logoTitle, createStudyBtn }: Props) => {
           style={{ marginTop: '2em', backgroundColor: 'transparent', color: 'whitesmoke' }}>
           서비스 소개
         </Button>
-        {/* <button onClick={() => mainAxios.delete('https://codeback.net:8080/room/delete')}>
-          방삭제
-        </button> */}
       </div>
 
       <h1
