@@ -1,10 +1,30 @@
-import React, { ReactNode, useEffect, useRef } from 'react';
+/*eslint-disable */
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useHistory } from 'react-router-dom';
+import { BackTop, Button } from 'antd';
 import styles from './index.module.css';
 import allGif from 'assets/imgs/codeback-all.gif';
 import camGif from 'assets/imgs/codeback-cam.gif';
 import codeGif from 'assets/imgs/codeback-code.gif';
-import { Button } from 'antd';
-import { UpCircleOutlined } from '@ant-design/icons';
+import useAuth from 'hooks/useAuth';
+import { CssKeyObject } from 'types/common';
+import { FacebookOutlined, GithubOutlined, InstagramOutlined } from '@ant-design/icons';
+
+const styless: CssKeyObject = {
+  header: {
+    position: 'fixed',
+    width: '100%',
+    backgroundColor: 'transparent',
+    transition: 'all 200ms ease-in'
+  },
+  headerFix: {
+    position: 'fixed',
+    width: '100%',
+    backgroundColor: '#e05880',
+    transition: 'all 200ms ease-in'
+  }
+};
 
 type Props = {
   header: ReactNode;
@@ -12,16 +32,33 @@ type Props = {
   createStudyBtn: ReactNode;
 };
 
-const LandingTemplate = ({ header, logoTitle, createStudyBtn }: Props) => {
+const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) => {
+  const auth = useAuth();
   const guideRef = useRef<HTMLHeadingElement>(null);
-  useEffect(() => {}, []);
+  const history = useHistory();
+  const [darkHeader, setDarkHeader] = useState(false);
+
+  useEffect(() => {
+    const scrollEvent = () => {
+      if (!darkHeader && window.scrollY > 1) {
+        setDarkHeader(true);
+      } else {
+        setDarkHeader(false);
+      }
+    };
+
+    window.addEventListener('scroll', scrollEvent);
+    return () => {
+      window.removeEventListener('scroll', scrollEvent);
+    };
+  }, []);
+
   return (
     <div className={styles.container2}>
-      {header}
+      <div style={darkHeader ? styless.headerFix : styless.header}>{header}</div>
       <div className={styles.container}>
         <div className={styles.logoTitleContainer}>{logoTitle}</div>
-        <div>{createStudyBtn}</div>
-
+        {auth.authenticated && <div>{createStudyBtn}</div>}
         <Button
           onClick={() => {
             guideRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,6 +76,7 @@ const LandingTemplate = ({ header, logoTitle, createStudyBtn }: Props) => {
           fontFamily: 'logoFont',
           color: 'whitesmoke',
           textAlign: 'center',
+          paddingTop: '3em',
           marginBottom: '5em'
         }}>
         Codeback에 대해서 알아볼까요?
@@ -98,19 +136,49 @@ const LandingTemplate = ({ header, logoTitle, createStudyBtn }: Props) => {
         이제 시작해볼까요?
       </h1>
       <div style={{ textAlign: 'center', marginBottom: '10em' }}>
-        <UpCircleOutlined
-          onClick={() =>
-            window.scroll({
-              top: 0,
-              left: 0,
-              behavior: 'smooth'
-            })
-          }
-          style={{ color: 'whitesmoke', fontSize: '2rem' }}
-        />
+        <Button
+          onClick={() => history.push('/signup')}
+          size="large"
+          shape="round"
+          style={{ color: '#b24592' }}>
+          회원가입하고 시작하기
+        </Button>
       </div>
+      <footer
+        style={{
+          backgroundColor: 'black',
+          width: '100%',
+          height: '10em',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+        <span style={{ color: 'whitesmoke', fontSize: '1rem' }}>Made by ❤ CodeBack</span>
+        <div style={{ marginLeft: '1em' }}>
+          <GithubOutlined
+            style={{
+              fontSize: '1.5rem',
+              color: 'whitesmoke',
+              marginRight: '.3em',
+              cursor: 'pointer'
+            }}
+          />
+          <InstagramOutlined
+            style={{
+              fontSize: '1.5rem',
+              color: 'whitesmoke',
+              marginRight: '.3em',
+              cursor: 'pointer'
+            }}
+          />
+          <FacebookOutlined
+            style={{ fontSize: '1.5rem', color: 'whitesmoke', cursor: 'pointer' }}
+          />
+        </div>
+      </footer>
+      <BackTop />
     </div>
   );
-};
+});
 
 export default LandingTemplate;
