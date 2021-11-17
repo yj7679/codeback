@@ -10,7 +10,12 @@ import codeGif from 'assets/imgs/codeback-coding.gif';
 import joinGif from 'assets/imgs/codeback-join-without-login.gif';
 import useAuth from 'hooks/useAuth';
 import { CssKeyObject } from 'types/common';
-import { FacebookOutlined, GithubOutlined, InstagramOutlined } from '@ant-design/icons';
+import {
+  ArrowDownOutlined,
+  FacebookOutlined,
+  GithubOutlined,
+  InstagramOutlined
+} from '@ant-design/icons';
 
 const styless: CssKeyObject = {
   header: {
@@ -35,7 +40,8 @@ type Props = {
 
 const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) => {
   const auth = useAuth();
-  const guideRef = useRef<HTMLHeadingElement>(null);
+  const introduceRef = useRef<HTMLHeadingElement>(null);
+  const functionRef = useRef<HTMLHeadingElement>(null);
   const history = useHistory();
   const [darkHeader, setDarkHeader] = useState(false);
 
@@ -62,28 +68,54 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
         {auth.authenticated && <div>{createStudyBtn}</div>}
         <Button
           onClick={() => {
-            guideRef.current?.scrollIntoView({ behavior: 'smooth' });
+            introduceRef.current?.scrollIntoView({ behavior: 'smooth' });
           }}
           size="large"
           shape="round"
           style={{ marginTop: '2em', backgroundColor: 'transparent', color: 'whitesmoke' }}>
-          서비스 소개
+          소개
         </Button>
       </div>
 
-      <h1
-        ref={guideRef}
-        style={{
-          fontFamily: 'logoFont',
-          color: 'whitesmoke',
-          textAlign: 'center',
-          paddingTop: '3em',
-          marginBottom: '5em'
-        }}>
-        Codeback에 대해서 알아볼까요?
-      </h1>
+      <div style={{ height: '100vh', textAlign: 'center', marginBottom: '5em' }}>
+        <h1
+          ref={introduceRef}
+          style={{
+            fontFamily: 'logoFont',
+            color: 'whitesmoke',
+            textAlign: 'center',
+            paddingTop: '5em',
+            marginBottom: '2em'
+          }}>
+          코드백이 탄생한 이유
+        </h1>
+        <p style={{ color: 'whitesmoke', fontSize: '1.5rem' }}>
+          코딩테스트 스터디를 진행하면서 <br />
+          "이렇게 작성하면 더 깔끔하고 좋을 것 같은데...",
+          <br />
+          "저 밑에 있는 코드가 안보이는데 뭐지? 보고싶어...😞",
+          <br />
+          "작성한 코드 결과 확인해보고싶은데... 귀찮아..."+
+          <br />
+          속으로 생각한 적 다들 있지 않나요?
+        </p>
+        <p style={{ color: 'whitesmoke', fontSize: '1.5rem' }}>
+          이런 불편함을 극복하고자 <strong>코드백(코드 + 피드백)</strong>이 탄생했습니다👏
+        </p>
+        <Button
+          onClick={() => {
+            functionRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          icon={<ArrowDownOutlined />}
+          style={{
+            marginTop: '3em',
+            backgroundColor: 'transparent',
+            color: 'whitesmoke'
+          }}></Button>
+      </div>
 
       <div
+        ref={functionRef}
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -91,6 +123,16 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
           margin: 'auto',
           width: '70em'
         }}>
+        <h1
+          style={{
+            fontFamily: 'logoFont',
+            color: 'whitesmoke',
+            textAlign: 'center',
+            paddingTop: '3em',
+            marginBottom: '2em'
+          }}>
+          기능에 대해서 알아볼까요?
+        </h1>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10em' }}>
           <div>
             <h1 style={{ fontFamily: 'titleFont', color: 'whitesmoke' }}>화상 회의</h1>
