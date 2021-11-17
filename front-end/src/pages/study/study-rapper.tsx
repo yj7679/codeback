@@ -6,9 +6,9 @@ import { observer } from 'mobx-react-lite';
 import { config } from 'config/config';
 import SocketClient from 'config/socket';
 import Study from './study';
-
 import useStudy from 'hooks/useStudy';
 import { msg } from 'util/message';
+import { PageLoading } from 'components';
 
 type LocationState = {
   host: boolean;
@@ -33,7 +33,7 @@ const StudyRapper = observer(() => {
   }, [study, id, location.state]);
 
   if (!isExistStudy) {
-    return <div style={{ margin: 'auto' }}>존재하지 않는 스터디입니다.</div>;
+    return <PageLoading />;
   }
 
   return <Study socket={socket} id={id} isHost={location.state ? location.state.host : false}/>;
