@@ -30,7 +30,7 @@ export const routes: RouteType[] = [
     path: '/study/:id',
     exact: true,
     private: false,
-    component: lazy(() => import('pages/study/study')),
+    component: lazy(() => import('pages/study/study-rapper')),
     fallback: <PageLoading />
   },
   {

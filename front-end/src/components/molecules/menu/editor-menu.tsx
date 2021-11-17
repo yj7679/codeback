@@ -5,7 +5,6 @@ import useEditor from 'hooks/useEditor';
 import { OptionType } from 'stores/editor/model/editor-model';
 import { CssKeyObject } from 'types/common';
 import { CompileBtn, UrlCopyBtn } from 'components';
-import SocketClient from 'config/socket';
 
 const { Option } = Select;
 
@@ -24,17 +23,17 @@ const styles: CssKeyObject = {
   }
 };
 
-const EditorMenu = observer(() => {
+const EditorMenu = observer(({ socket }: { socket: any }) => {
   const editor = useEditor();
 
   useEffect(() => {
-    SocketClient.io.on('language', (language: any) => {
+    socket.io.on('language', (language: any) => {
       editor.language = { ...language };
     });
-  }, [editor]);
+  }, [editor, socket.io]);
 
   const handleLanguageChange = (value: OptionType) => {
-    SocketClient.io.emit('language', value);
+    socket.io.emit('language', value);
     editor.language = value;
   };
 
@@ -52,7 +51,7 @@ const EditorMenu = observer(() => {
 
       <Divider type="vertical" />
 
-      <CompileBtn style={styles.option} />
+      <CompileBtn style={styles.option} socket={socket} />
 
       <Divider type="vertical" />
 

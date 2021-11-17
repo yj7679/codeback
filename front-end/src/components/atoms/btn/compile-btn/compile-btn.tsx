@@ -2,11 +2,11 @@ import React from 'react';
 import { Button } from 'antd';
 import useEditor from 'hooks/useEditor';
 
-const CompileBtn = ({ style }: { style?: React.CSSProperties }) => {
+const CompileBtn = ({ style, socket }: { style?: React.CSSProperties; socket: any }) => {
   const editor = useEditor();
 
   const compile = () => {
-    editor.compile();
+    editor.compile(socket);
   };
 
   return (
