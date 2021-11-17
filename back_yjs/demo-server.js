@@ -34,7 +34,15 @@ try{
   })
   const wss = new WebSocket.Server({ server })
   
-  wss.on('connection', (conn, req) => setupWSConnection(conn, req, { gc: req.url.slice(1) !== 'prosemirror-versions' }))
+  wss.on('connection', (conn, req) => {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log('new client connection ip : ', ip);
+    setupWSConnection(conn, req, { gc: req.url.slice(1) !== 'prosemirror-versions' });
+
+    conn.on('close', () => {
+      console.log('client close ip : ', ip);
+    })
+  })
   
   server.listen(port)
   
