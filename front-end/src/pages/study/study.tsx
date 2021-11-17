@@ -73,7 +73,13 @@ const Study = observer(({ socket, id, isHost }: { socket: any; id: string; isHos
           videoRoom={<OpenViduMain roomTitle="1234" pinNumber={id} nickname={nickname} />}
         />
       ) : (
-        <div style={{ margin: 'auto' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh'
+          }}>
           <NicknameForm setNickname={setNickname} />
         </div>
       )}
