@@ -44,7 +44,6 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
         name: userName,
         color: cursorColor
       });
-      console.log('yjs 프로바이더 ing', wsProvider);
 
       // "Bind" the codemirror editor to a Yjs text type.
       codemirrorBinding = new CodemirrorBinding(yText, editorRef.current, wsProvider.awareness);

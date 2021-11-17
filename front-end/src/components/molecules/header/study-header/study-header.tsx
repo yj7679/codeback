@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { EditorMenu, LogoBtn } from 'components';
 import styles from './study-header.module.css';
-import SocketClient from 'config/socket';
 
-const StudyHeader = () => {
+const StudyHeader = ({ socket }: { socket: any }) => {
   const [roomDeleted, setRoomDeleted] = useState(false);
   useEffect(() => {
-    if (SocketClient.io == null) return;
-    SocketClient.io.on('roomDeleted', () => {
+    if (socket.io == null) return;
+    socket.io.on('roomDeleted', () => {
       setRoomDeleted(true);
     });
-  }, []);
+  }, [socket.io]);
 
   return (
     <>
@@ -19,7 +18,7 @@ const StudyHeader = () => {
         {roomDeleted && (
           <span className={styles.msg}>호스트가 나가 더 이상 이용할 수 없는 방입니다.</span>
         )}
-        <EditorMenu />
+        <EditorMenu socket={socket} />
       </header>
       <div className={styles.divider}></div>
     </>

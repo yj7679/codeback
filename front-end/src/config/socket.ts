@@ -1,7 +1,6 @@
 import io from 'socket.io-client';
-import { config } from './config';
 
-class SocketClient {
+export default class SocketClient {
   io: any;
 
   constructor(private readonly baseURL: string) {
@@ -58,5 +57,3 @@ class SocketClient {
     );
   }
 }
-
-export default new SocketClient(config.compileApi);
