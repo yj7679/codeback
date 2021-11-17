@@ -11,7 +11,6 @@ import joinGif from 'assets/imgs/codeback-join-without-login.gif';
 import useAuth from 'hooks/useAuth';
 import { CssKeyObject } from 'types/common';
 import { FacebookOutlined, GithubOutlined, InstagramOutlined } from '@ant-design/icons';
-import { mainAxios } from 'config/axios';
 
 const styless: CssKeyObject = {
   header: {
@@ -70,7 +69,6 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
           style={{ marginTop: '2em', backgroundColor: 'transparent', color: 'whitesmoke' }}>
           서비스 소개
         </Button>
-        <button onClick={() => mainAxios.delete('https://codeback.net:8080/room')}>방삭제</button>
       </div>
 
       <h1
