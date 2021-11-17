@@ -176,6 +176,7 @@ export class AuthImpl implements Auth {
       await authRepository.deleteAccount();
       runInAction(() => {
         this.authenticated = false;
+        localStorage.removeItem('user');
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {

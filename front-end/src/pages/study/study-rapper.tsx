@@ -23,27 +23,6 @@ const StudyRapper = observer(() => {
   const history = useHistory();
 
   useEffect(() => {
-    const clear = () => {
-      if (location.state && location.state.host) {
-        socket.io.emit('roomDeleted');
-        socket.close();
-        study.leaveStudy().then(() => {
-          console.log('방 삭제');
-        });
-      } else {
-        socket.close();
-      }
-    };
-
-    window.addEventListener('beforeunload', clear);
-    window.removeEventListener('unload', clear);
-
-    return () => {
-      clear();
-    };
-  }, []);
-
-  useEffect(() => {
     study
       .verifyStudy(id)
       .then(() => setIsExistStudy(true))
@@ -57,7 +36,7 @@ const StudyRapper = observer(() => {
     return <div style={{ margin: 'auto' }}>존재하지 않는 스터디입니다.</div>;
   }
 
-  return <Study socket={socket} id={id} />;
+  return <Study socket={socket} id={id} isHost={location.state ? location.state.host : false}/>;
 });
 
 export default StudyRapper;
