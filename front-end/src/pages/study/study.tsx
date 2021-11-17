@@ -7,11 +7,32 @@ import { getRandomColor } from 'util/random-color';
 import { msg } from 'util/message';
 import useEditor from 'hooks/useEditor';
 import { OptionType } from 'stores/editor/model/editor-model';
+import useStudy from 'hooks/useStudy';
 
-const Study = observer(({ socket, id }: { socket: any; id: string }) => {
+const Study = observer(({ socket, id, isHost }: { socket: any; id: string; isHost: boolean }) => {
   const { info } = useAuth();
   const editor = useEditor();
+  const study = useStudy();
   const [nickname, setNickname] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const clear = () => {
+      if (isHost) {
+        socket.getSocket().emit('roomDeleted');
+        socket.close();
+        study.leaveStudy();
+      } else {
+        socket.close();
+      }
+    };
+
+    window.addEventListener('beforeunload', clear);
+    window.removeEventListener('unload', clear);
+
+    return () => {
+      clear();
+    };
+  }, [isHost, socket, study]);
 
   useEffect(() => {
     if (nickname == null) return;
