@@ -33,6 +33,7 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
     });
 
     let wsProvider: WebsocketProvider | null = null;
+    let codemirrorBinding: any;
     // 'wss://demos.yjs.dev'
     try {
       wsProvider = new WebsocketProvider(config.editorApi, cellId, ydoc);
@@ -43,9 +44,10 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
         name: userName,
         color: cursorColor
       });
+      console.log('yjs 프로바이더 ing', wsProvider);
 
       // "Bind" the codemirror editor to a Yjs text type.
-      new CodemirrorBinding(yText, editorRef.current, wsProvider.awareness);
+      codemirrorBinding = new CodemirrorBinding(yText, editorRef.current, wsProvider.awareness);
 
       wsProvider.on('status', (event: { status: string }) => {
         console.log(event.status); // logs "connected" or "disconnected"
@@ -55,11 +57,16 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
     }
 
     return () => {
-      if (wsProvider) {
+      if (wsProvider && wsProvider.shouldConnect) {
         wsProvider.disconnect();
       }
+      if (codemirrorBinding) {
+        codemirrorBinding.destroy();
+      }
+      ydoc.destroy();
+      editorStore.code = '';
     };
-  }, [cellId, cursorColor, userName]);
+  }, [cellId, cursorColor, userName, editorStore]);
 
   return (
     <div
