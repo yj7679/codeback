@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
 import { CodemirrorBinding } from 'y-codemirror';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
+import { Controlled as CodeMirror } from 'react-codemirror2';
 import { Editor as CodeMirrorEditor } from 'codemirror';
 import './editor-addon';
 import useEditor from 'hooks/useEditor';
@@ -73,7 +73,7 @@ const Editor = observer(({ cellId, userName, cursorColor }: EditorProps) => {
         value={editorStore.code}
         autoScroll
         editorDidMount={(editor) => (editorRef.current = editor)}
-        onChange={(_editor, _data, value) => {
+        onBeforeChange={(_editor, _data, value) => {
           editorStore.code = value;
         }}
         options={{
