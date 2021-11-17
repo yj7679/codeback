@@ -77,7 +77,15 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
         </Button>
       </div>
 
-      <div style={{ height: '100vh', textAlign: 'center', marginBottom: '5em' }}>
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '5em'
+        }}>
         <h1
           ref={introduceRef}
           style={{
@@ -87,15 +95,15 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
             paddingTop: '5em',
             marginBottom: '2em'
           }}>
-          코드백이 탄생한 이유
+          코드백의 탄생
         </h1>
         <p style={{ color: 'whitesmoke', fontSize: '1.5rem' }}>
           코딩테스트 스터디를 진행하면서 <br />
-          "이렇게 작성하면 더 깔끔하고 좋을 것 같은데...",
+          "이렇게 작성하면 더 깔끔하고 좋을 것 같은데 🥺",
           <br />
-          "저 밑에 있는 코드가 안보이는데 뭐지? 보고싶어...😞",
+          "저 밑에 있는 코드가 안보이는데 뭐지? 보고싶어 😞",
           <br />
-          "작성한 코드 결과 확인해보고싶은데... 귀찮아..."+
+          "코드 실행 결과 확인해보고 싶은데 번거롭네 😴",
           <br />
           속으로 생각한 적 다들 있지 않나요?
         </p>
