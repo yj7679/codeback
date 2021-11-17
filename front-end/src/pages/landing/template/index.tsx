@@ -4,12 +4,14 @@ import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 import { BackTop, Button } from 'antd';
 import styles from './index.module.css';
-import allGif from 'assets/imgs/codeback-all.gif';
+import allGif from 'assets/imgs/codeback-compile.gif';
 import camGif from 'assets/imgs/codeback-cam.gif';
-import codeGif from 'assets/imgs/codeback-code.gif';
+import codeGif from 'assets/imgs/codeback-coding.gif';
+import joinGif from 'assets/imgs/codeback-join-without-login.gif';
 import useAuth from 'hooks/useAuth';
 import { CssKeyObject } from 'types/common';
 import { FacebookOutlined, GithubOutlined, InstagramOutlined } from '@ant-design/icons';
+import { mainAxios } from 'config/axios';
 
 const styless: CssKeyObject = {
   header: {
@@ -68,6 +70,7 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
           style={{ marginTop: '2em', backgroundColor: 'transparent', color: 'whitesmoke' }}>
           서비스 소개
         </Button>
+        <button onClick={() => mainAxios.delete('https://codeback.net:8080/room')}>방삭제</button>
       </div>
 
       <h1
@@ -117,12 +120,30 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
 
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10em' }}>
           <div style={{ width: '16em' }}>
-            <h1 style={{ fontFamily: 'titleFont', color: 'whitesmoke' }}>실시간 컴파일</h1>
+            <h1 style={{ fontFamily: 'titleFont', color: 'whitesmoke' }}>컴파일</h1>
             <p style={{ color: 'whitesmoke', fontSize: '1.2rem' }}>
-              친구들과 작성한 코드를 실시간으로 컴파일해서 확인해볼 수 있어요!
+              친구들과 작성한 코드를 바로 실행해서 확인해볼 수 있어요!
+            </p>
+            <p style={{ color: 'whitesmoke', fontSize: '1.2rem' }}>
+              또한, 소켓 통신을 통해 결과값을 동시에 확인할 수 있어요!
             </p>
           </div>
           <img src={allGif} className={styles.allGif} />
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10em' }}>
+          <img src={joinGif} className={styles.joinGif} />
+          <div style={{ width: '20em' }}>
+            <h1 style={{ fontFamily: 'titleFont', color: 'whitesmoke' }}>로그인 없이 입장</h1>
+            <p style={{ color: 'whitesmoke', fontSize: '1.2rem' }}>
+              회원가입을 하지 않아도 <br />
+              바로 입장할 수 있어요!
+            </p>
+            <p style={{ color: 'whitesmoke', fontSize: '1.2rem' }}>
+              하지만, 무분별한 스터디 생성을 <br />
+              막기 위해 방장은 회원가입을 <br />꼭 해야한다는 점. 이해해주세요!
+            </p>
+          </div>
         </div>
       </div>
 
