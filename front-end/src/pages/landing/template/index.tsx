@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 import { BackTop, Button } from 'antd';
 import styles from './index.module.css';
-import allGif from 'assets/imgs/codeback-compile.gif';
+import compileGif from 'assets/imgs/codeback-compile.gif';
 import camGif from 'assets/imgs/codeback-cam.gif';
 import codeGif from 'assets/imgs/codeback-coding.gif';
 import joinGif from 'assets/imgs/codeback-join-without-login.gif';
@@ -126,7 +126,7 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
               또한, 소켓 통신을 통해 결과값을 동시에 확인할 수 있어요!
             </p>
           </div>
-          <img src={allGif} className={styles.allGif} />
+          <img src={compileGif} className={styles.compileGif} />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10em' }}>
