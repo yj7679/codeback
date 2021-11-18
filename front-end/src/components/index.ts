@@ -19,10 +19,15 @@ export { default as BoxLoading } from './atoms/loading/box-loading/box-loading';
 export { default as MainHeader } from './molecules/header/main-header/main-header';
 export { default as StudyHeader } from './molecules/header/study-header/study-header';
 export { default as LogoHeader } from './molecules/header/logo-header/logo-header';
+
+/* modal */
 export { default as LoginModal } from './molecules/modal/login-modal/login-modal';
+export { default as FeedbackModal } from './molecules/modal/feedback-modal/feedback-modal';
+
 export { default as SignupForm } from './molecules/form/signup-form/signup-form';
 export { default as LoginForm } from './molecules/form/login-form/login-form';
 export { default as NicknameForm } from './molecules/form/nickname-form/nickname-form';
+export { default as FeedbackForm } from './molecules/form/feedback-form/feedback-form';
 export { default as UserInfoForm } from './molecules/form/user-info-form/user-info-form';
 export { default as EditorMenu } from './molecules/menu/editor-menu';
 
