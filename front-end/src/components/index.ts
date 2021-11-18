@@ -9,6 +9,7 @@ export { default as DataInput } from './atoms/data-input/data-input';
 export { default as DataOutput } from './atoms/data-output/data-output';
 export { default as AvatarBtn } from './atoms/btn/avatar-btn/avatar-btn';
 export { default as CompileBtn } from './atoms/btn/compile-btn/compile-btn';
+export { default as CopyCodeTemplateBtn } from './atoms/btn/copy-code-template-btn/copy-code-template-btn';
 
 /* loading */
 export { default as PageLoading } from './atoms/loading/page-loading/page-loading';

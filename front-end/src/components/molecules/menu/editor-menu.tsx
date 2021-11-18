@@ -4,7 +4,7 @@ import { Divider, Select } from 'antd';
 import useEditor from 'hooks/useEditor';
 import { OptionType } from 'stores/editor/model/editor-model';
 import { CssKeyObject } from 'types/common';
-import { CompileBtn, UrlCopyBtn } from 'components';
+import { CompileBtn, CopyCodeTemplateBtn, UrlCopyBtn } from 'components';
 
 const { Option } = Select;
 
@@ -52,6 +52,10 @@ const EditorMenu = observer(({ socket }: { socket: any }) => {
       <Divider type="vertical" />
 
       <CompileBtn style={styles.option} socket={socket} />
+
+      <Divider type="vertical" />
+
+      <CopyCodeTemplateBtn />
 
       <Divider type="vertical" />
 
