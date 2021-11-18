@@ -3,6 +3,12 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 import { BackTop, Button } from 'antd';
+import {
+  ArrowDownOutlined,
+  FacebookOutlined,
+  GithubOutlined,
+  InstagramOutlined
+} from '@ant-design/icons';
 import styles from './index.module.css';
 import compileGif from 'assets/imgs/codeback-compile.gif';
 import camGif from 'assets/imgs/codeback-cam.gif';
@@ -10,12 +16,6 @@ import codeGif from 'assets/imgs/codeback-coding.gif';
 import joinGif from 'assets/imgs/codeback-join-without-login.gif';
 import useAuth from 'hooks/useAuth';
 import { CssKeyObject } from 'types/common';
-import {
-  ArrowDownOutlined,
-  FacebookOutlined,
-  GithubOutlined,
-  InstagramOutlined
-} from '@ant-design/icons';
 
 const styless: CssKeyObject = {
   header: {
@@ -78,16 +78,14 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
       </div>
 
       <div
+        ref={introduceRef}
         style={{
           height: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: '5em'
+          alignItems: 'center'
         }}>
         <h1
-          ref={introduceRef}
           style={{
             fontFamily: 'logoFont',
             color: 'whitesmoke',
@@ -116,9 +114,9 @@ const LandingTemplate = observer(({ header, logoTitle, createStudyBtn }: Props) 
           }}
           icon={<ArrowDownOutlined />}
           style={{
-            marginTop: '3em',
             backgroundColor: 'transparent',
-            color: 'whitesmoke'
+            color: 'whitesmoke',
+            marginTop: '1em'
           }}></Button>
       </div>
 
