@@ -49,9 +49,9 @@ public class RoomController {
             String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 
             Claims claims = Jwts.parserBuilder().setSigningKey(getSignedKey(key)).build().parseClaimsJws(decryptedAccessToken).getBody();
-            System.out.println(claims.toString());
+
+            roomService.deleteByUserNumber(Long.parseLong(claims.get("userNumber").toString()));
             String roomId = roomService.makeRoom(Long.parseLong(claims.get("userNumber").toString()));
-            System.out.println(roomId);
             return new ResponseEntity<String>(roomId,HttpStatus.OK);
         }
         catch (Exception e){

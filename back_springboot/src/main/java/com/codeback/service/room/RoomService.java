@@ -53,6 +53,8 @@ public class RoomService {
 
     @Transactional
     public void deleteByUserNumber(long userNumber) {
-        roomRepository.deleteByUserUserNumber(userNumber);
+        Optional<Room> room = roomRepository.findByUserUserNumber(userNumber);
+        if(room.isPresent())
+            roomRepository.deleteByUserUserNumber(userNumber);
     }
 }
