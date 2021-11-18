@@ -40,3 +40,13 @@ export const INTERNAL_SERVER_ERROR = '서버에 문제가 발생했습니다.';
 export const FAIL_TO_CREATE_STUDY = '방만들기에 실패하셨습니다.';
 export const FAIL_TO_LEAVE_STUDY = '세션 종료에 실패하셨습니다.';
 export const NOT_EXIST_STUDY = '존재하지 않는 스터디입니다.';
+
+/* code template */
+export const JAVA_TEMPLATE = `public class Main {\n\tpublic static void main(String args[]) {\n\t\tSystem.out.print("hello world");\n\t}\n}`;
+
+export const CPP_TEMPLATE = `#include <iostream>\nusing namespace std;\nint main() {\n\tcout << "hello world" << '\\n';\n}`;
+
+export const JAVASCRIPT_TEMPLATE =
+  'const fs = require("fs");\nconst stdin = (`1\n23\n456`\n).split(`\\n`);\n\nconst input = (() => {\n\tlet line = 0;\n\treturn () => stdin[line++];\n})();\nconsole.log(input())\nconsole.log(input())\nconsole.log(input())';
+
+export const PYTHON_TEMPLATE = `print("hello world");`;
