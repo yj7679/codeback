@@ -41,7 +41,7 @@ UCC : [https://www.youtube.com/watch?v=itYR19UpJhM](https://www.youtube.com/watc
 - 컴파일 및 실행 결과 공유
 - 손쉬운 방 생성 & 입장
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/904de8af-750a-4b49-b5d5-eb2d8a82fcdd/Untitled.png)
+![image](/uploads/3e5ba5a4c1ec2980d4d9861ea8c7ccbf/image.png)
 
 ## **기술 스택**
 
