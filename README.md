@@ -40,7 +40,7 @@ UCC : [https://www.youtube.com/watch?v=itYR19UpJhM](https://www.youtube.com/watc
 ![image](/uploads/1eae3a032e2b45e8dbe2e2cbdc078a83/image.png)
 
 ```
-BE : Springboot, nodejs express, mysql
+BE : Springboot, nodejs express, mysql, redis
 FE : react
 INFRA : nginx, jenkins, docker, amazon ec2
 ```
