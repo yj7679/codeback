@@ -45,7 +45,7 @@ UCC : [https://www.youtube.com/watch?v=itYR19UpJhM](https://www.youtube.com/watc
 
 ## **기술 스택**
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9924f751-adfb-4a89-b62e-d252164f4069/Untitled.png)
+![image](/uploads/1eae3a032e2b45e8dbe2e2cbdc078a83/image.png)
 
 ```
 BE : Springboot, nodejs express, mysql
