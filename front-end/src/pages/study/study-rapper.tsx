@@ -21,8 +21,6 @@ const StudyRapper = () => {
   const { id }: { id: string } = useParams();
   const [isExistStudy, setIsExistStudy] = useState(false);
 
-  console.log(' 몇번 찍히나?');
-
   useEffect(() => {
     study
       .verifyStudy(id)
