@@ -15,7 +15,7 @@ const MainHeader = observer(() => {
       <LogoBtn />
       <Button
         onClick={() => setShowFeedbackModal(true)}
-        style={{ backgroundColor: 'transparent', color: 'whitesmoke' }}>
+        style={{ backgroundColor: 'transparent', color: 'whitesmoke', marginRight: '3.5em' }}>
         한 줌의 관심
       </Button>
       {auth.authenticated ? <AvatarBtn /> : <LoginBtn onClick={() => setVisible(true)} />}
