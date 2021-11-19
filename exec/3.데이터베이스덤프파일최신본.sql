@@ -1,5 +1,5 @@
-create database codeback2;
-use codeback2;
+create database codeback;
+use codeback;
 -- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
 --
 -- Host: localhost    Database: codeback
