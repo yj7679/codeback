@@ -21,7 +21,7 @@
 |  | 이용직 | 박민상 | 안영진 | 장준혁 |
 | --- | --- | --- | --- | --- |
 | 역할 | 팀장, 백엔드 | 백엔드 | 백엔드 | 프론트엔드 |
-| 담당내용 | HTTPS 적용, Spring Boot, 유저 인증 | 코드 동시 편집, 컴파일 서버, Node.js | CI / CD, Spring Boot, OpenVidu | 모든 기능 및 디자인 ,React, TypeScript |
+| 담당내용 | HTTPS 적용, Spring Boot, 유저 인증, OpenVidu | 코드 동시 편집, 컴파일 서버, Node.js | CI / CD, Spring Boot, OpenVidu | 모든 기능 및 디자인 ,React, TypeScript |
 
 ## **프로젝트설명**
 
